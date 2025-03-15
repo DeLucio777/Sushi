@@ -25,8 +25,8 @@
     margin-right: 40px;
     width: 30px;
     height: 30px;
-    /*background-image: url('/Styles/img/user.png'); /* Замените на путь к вашей иконке */
-    background-image: url('../Styles/img/user.png'); /* Замените на путь к вашей иконке */
+    /*background-image: url('/Styles/img/user.png');*/
+    background-image: url('../Styles/img/user.png'); 
     background-size: cover;
     background-position: center;
     border-radius: 50%;
@@ -36,10 +36,10 @@
 
 
     .custom-font {
-    font-family: 'Arial', sans-serif; /* Укажите нужный шрифт */
-    font-size: 30px; /* Размер шрифта */
-    font-weight: bold; /* Жирность текста */
-    color: #ffffff; /* Цвет текста */
+    font-family: 'Arial', sans-serif; 
+    font-size: 30px; 
+    font-weight: bold; 
+    color: #ffffff; 
   }
 
 
