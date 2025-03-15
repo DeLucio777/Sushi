@@ -70,10 +70,9 @@ func getUserByInputParams(db *sql.DB, sName string, sPassword string) (bool, err
 	defer rows.Close()
 
 	if !rows.Next() {
-		return false, nil // Нет строк, возвращаем false
+		return false, nil 
 	}
 
-	// Обработка результатов запроса
 	for rows.Next() {
 
 		var student User
