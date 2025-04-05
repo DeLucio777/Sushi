@@ -84,6 +84,72 @@ func getUserByInputParams(db *sql.DB, sName string, sPassword string) (*User, er
 	return nil, fmt.Errorf("пользователь не найден")
 }
 
+func setUserByInputParamsHandler(w http.ResponseWriter, r *http.Request) {
+	db, err := connectDB()
+	if err != nil {
+		http.Error(w, "Ошибка подключения к базе данных", http.StatusInternalServerError)
+		return
+	}
+	defer db.Close()
+
+	var input struct {
+		UserName     string `json:"user_name"`
+		UserPassword string `json:"user_password"`
+	}
+
+	err = json.NewDecoder(r.Body).Decode(&input)
+	if err != nil {
+		http.Error(w, "Ошибка декодирования данных", http.StatusBadRequest)
+		return
+	}
+
+	sName := input.UserName
+	sPassword := input.UserPassword
+
+	if sName == "" {
+		http.Error(w, "Параметр имя обязателен", http.StatusBadRequest)
+		return
+	}
+	if sPassword == "" {
+		http.Error(w, "Параметр пароль обязателен", http.StatusBadRequest)
+		return
+	}
+
+	exists, err := userExists(db, sName, sPassword)
+	if err != nil {
+		http.Error(w, "Ошибка проверки пользователя", http.StatusInternalServerError)
+		return
+	}
+	if exists {
+		http.Error(w, "Пользователь уже существует", http.StatusConflict)
+		return
+	}
+
+	err = insertUser(db, sName, sPassword)
+	if err != nil {
+		http.Error(w, "Ошибка добавления пользователя", http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusCreated) // Успешное создание
+	json.NewEncoder(w).Encode(map[string]string{"message": "Пользователь успешно создан"})
+}
+
+func userExists(db *sql.DB, sName string, sPassword string) (bool, error) {
+	query := `SELECT COUNT(*) FROM users WHERE name = $1 and password = $2`
+	var count int
+	err := db.QueryRow(query, sName, sPassword).Scan(&count)
+	if err != nil {
+		return false, err
+	}
+	return count > 0, nil
+}
+
+func insertUser(db *sql.DB, sName string, sPassword string) error {
+	query := `INSERT INTO users (name, password) VALUES ($1, $2)`
+	_, err := db.Exec(query, sName, sPassword)
+	return err
+}
 func index(w http.ResponseWriter, r *http.Request) {
 	tmpl, err := template.ParseFiles("Pages/main.html")
 	if err != nil {
@@ -98,7 +164,7 @@ func handleRequest() {
 	http.Handle("/Pages/", http.StripPrefix("/Pages/", http.FileServer(http.Dir("./Pages/"))))
 	http.HandleFunc("/", index)
 	http.HandleFunc("/api/user_by_params", getUserByInputParamsHandler)
-	http.HandleFunc("/api/user_by_params_set", getUserByInputParamsHandler)
+	http.HandleFunc("/api/user_by_params_set", setUserByInputParamsHandler)
 
 	err := http.ListenAndServe(":8080", nil)
 	if err != nil {
