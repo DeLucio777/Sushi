@@ -33,15 +33,17 @@
 </body>
 <script>
     async function checkData(uName, uPassword) {
+        alert('/api/user_by_params?user_name=' + encodeURIComponent(uName) + '&user_password=' + encodeURIComponent(uPassword))
         try {
             const response = await fetch('/api/user_by_params?user_name=' + encodeURIComponent(uName) + '&user_password=' + encodeURIComponent(uPassword), {
-                method: 'GET',
+                method: 'POST',
             });
+            alert('do')
             if (!response.ok) {
                 throw new Error('Ошибка запроса: ' + response.statusText);
             }
-            const data = await response.json();
-            alert(JSON.stringify(data))
+            // const data = await response.json();
+            alert(JSON.stringify('data'))
         } catch (error) {
             console.error('Ошибка:', error);
             alert('Ошибка: ' + error.message);
