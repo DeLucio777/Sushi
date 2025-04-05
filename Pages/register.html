@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="/Styles/regstyle.css">
 </head>
 <body class="container">
-<form class="form">
+<form class="form" onsubmit="event.preventDefault(); checkData(uname.value, password.value);">
     <p class="form-title">Войдите в свой аккаунт</p>
     <div class="input-container">
         <input type="Эл. почта" placeholder="Введите эл. почту" id="uName" name="uname" value="name1">
@@ -18,7 +18,7 @@
     <div class="input-container">
         <input type="password" placeholder="Введите пароль" name="password" value="password1">
     </div>
-    <button type="submit" class="submit" onclick="checkData(uname.value,password.value)">
+    <button type="submit" class="submit"">
         Войти
     </button>
 
@@ -36,14 +36,19 @@
         alert('/api/user_by_params?user_name=' + encodeURIComponent(uName) + '&user_password=' + encodeURIComponent(uPassword))
         try {
             const response = await fetch('/api/user_by_params?user_name=' + encodeURIComponent(uName) + '&user_password=' + encodeURIComponent(uPassword), {
-                method: 'POST',
+                method: 'GET',
             });
-            alert('do')
             if (!response.ok) {
                 throw new Error('Ошибка запроса: ' + response.statusText);
             }
-            // const data = await response.json();
-            alert(JSON.stringify('data'))
+            const data = await response.json();
+            // alert(JSON.stringify(data))
+            let fUser = {
+                name:data.name,
+                password:data.password
+            }
+            // localStorage.setItem('user', JSON.stringify(fUser))
+            document.location.href='../Pages/main.html'
         } catch (error) {
             console.error('Ошибка:', error);
             alert('Ошибка: ' + error.message);

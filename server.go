@@ -54,6 +54,10 @@ func getUserByInputParamsHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Ошибка получения данных", http.StatusInternalServerError)
 		return
 	}
+	if res == nil {
+		http.Error(w, "Пользователь не найден", http.StatusNotFound)
+		return
+	}
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(res)
 }
@@ -74,7 +78,6 @@ func getUserByInputParams(db *sql.DB, sName string, sPassword string) (*User, er
 		if err != nil {
 			return nil, err
 		}
-		fmt.Println(user)
 
 		return &user, nil
 	}
@@ -95,6 +98,7 @@ func handleRequest() {
 	http.Handle("/Pages/", http.StripPrefix("/Pages/", http.FileServer(http.Dir("./Pages/"))))
 	http.HandleFunc("/", index)
 	http.HandleFunc("/api/user_by_params", getUserByInputParamsHandler)
+	http.HandleFunc("/api/user_by_params_set", getUserByInputParamsHandler)
 
 	err := http.ListenAndServe(":8080", nil)
 	if err != nil {
