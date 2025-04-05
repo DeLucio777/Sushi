@@ -66,3 +66,12 @@ input:focus {
 input:hover {
   outline: 1px solid lightgrey;
 }
+.section {
+  border-top: 2px solid #000; /* Линия сверху */
+  margin: 20px 0; /* Отступы сверху и снизу */
+  padding-top: 10px; /* Отступ сверху внутри раздела */
+}
+.section-title {
+  text-align: center; /* Центрирование текста */
+  font-weight: bold; /* Жирный текст */
+}
