@@ -16,103 +16,65 @@
         <br>
         <br>
         <br>
-        <h1>Содержание</h1>
-        <ul>
-            <li><a href="#section1">Раздел 1</a></li>
-            <li><a href="#section2">Раздел 2</a></li>
-            <li><a href="#section3">Раздел 3</a></li>
-        </ul>
-    
-        <div id="section1" class="section">
-            <div class="section-title">Суши и роллы</div>
+        <button style="width: 100%; height: 20%; background: white" onclick="document.location.href='https://github.com/DeLucio777/Sushi' ">Тут могла быть ваша реклама</button>
+        <br>
+        <div class="container">
+            <div class="product">
+                <img src="../Styles/img/photo0jpg.jpg" alt="Суши с терияки">
+                <h2>Суши с терияки</h2>
+                <p>Суши из форели, водорослей, сливочного соуса, огурцев и соуса терияки</p>
+                <div class="input-group quantity_goods" style="margin: 5px 0;">
+                    <input type="number" step="1" min="1" max="10" value="1" style="width: 50px; text-align: center;">
+                </div>
+                <button class="add-to-cart" onclick="addToCart('Товар 1')">В корзину</button>
+            </div>
+            <div class="product">
+                <img src="../Styles/img/1eefcf4a097f5e3f325acf638484be---jpg_800x500_whitepadding15_fb108_convert.jpg" alt="Суши Филадельфия">
+                <h2>Суши Филадельфия</h2>
+                <p>Суши из красной рыбы, водорослей, сливочного соуса и огурцов</p>
+                <div class="input-group quantity_goods" style="margin: 5px 0;">
+                    <input type="number" step="1" min="1" max="10" value="1" style="width: 50px; text-align: center;">
+                </div>
+                <button class="add-to-cart" onclick="addToCart('Товар 2')">В корзину</button>
+            </div>
+            <div class="product">
+                <img src="../Styles/img/images.jpg" alt="Суши Нигири">
+                <h2>Суши Нигири</h2>
+                <p>Суши из красной рыбы, риса и водорослей</p>
+                <div class="input-group quantity_goods" style="margin: 5px 0;">
+                    <input type="number" step="1" min="1" max="10" value="1" style="width: 50px; text-align: center;">
+                </div>
+                <button class="add-to-cart" onclick="addToCart('Товар 3')">В корзину</button>
+            </div>
+            <div class="product">
+                <img src="../Styles/img/kanada-sushi-roll.jpg" alt="Канада суши">
+                <h2>Канада суши</h2>
+                <p>Суши из красной рыбы, риса, водорослей, огурца и сливочного соуса</p>
+                <div class="input-group quantity_goods" style="margin: 5px 0;">
+                    <input type="number" step="1" min="1" max="10" value="1" style="width: 50px; text-align: center;">
+                </div>
+                <button class="add-to-cart" onclick="addToCart('Товар 3')">В корзину</button>
+            </div>
+            <div class="product">
+                <img src="../Styles/img/464731543027662.jpg" alt="Кока-кола">
+                <h2>Кока-кола</h2>
+                <p>Освежающий газированный напиток. 0,5 л</p>
+                <div class="input-group quantity_goods" style="margin: 5px 0;">
+                    <input type="number" step="1" min="1" max="10" value="1" style="width: 50px; text-align: center;">
+                </div>
+                <button class="add-to-cart" onclick="addToCart('Товар 3')">В корзину</button>
+            </div>
+            <!-- Добавьте больше товаров по аналогии -->
         </div>
-        <table style="border-collapse: collapse; width: 100%; margin: 0; padding: 0;">
-            <tr>
-                <td style="border: none; padding: 0;">
-                    <div class="product-cell" style="padding: 10px; width: 125px; text-align: center; margin: 0; display: inline-block;">
-                        <img src="../Styles/img/photo0jpg.jpg" alt="Суши с терияки" style="width: 125px; height: auto;">
-                        <h3 style="font-size: 1.2em;">Суши с терияки</h3>
-                        <p style="font-size: 0.9em;">Суши из форели, водорослей, сливочного соуса, огурцев и соуса терияки</p>
-                        <div class="input-group quantity_goods" style="margin: 5px 0;">
-                            <input type="number" step="1" min="1" max="10" value="1" style="width: 50px; text-align: center;">
-                        </div>
-                        <button onclick="" style="background-color: #28a745; color: white; border: none; padding: 5px 10px; cursor: pointer;">Добавить в корзину</button>
-                    </div>
-                </td>
-                <td style="border: none; padding: 0;">
-                    <div class="product-cell" style="padding: 10px; width: 125px; text-align: center; margin: 0; display: inline-block;">
-                        <img src="../Styles/img/1eefcf4a097f5e3f325acf638484be---jpg_800x500_whitepadding15_fb108_convert.jpg" alt="Суши Филадельфия" style="width: 125px; height: auto;">
-                        <h3 style="font-size: 1.2em;">Суши Филадельфия</h3>
-                        <p style="font-size: 0.9em;">Суши из красной рыбы, водорослей, сливочного соуса и огурцов</p>
-                        <div class="input-group quantity_goods" style="margin: 5px 0;">
-                            <input type="number" step="1" min="1" max="10" value="1" style="width: 50px; text-align: center;">
-                        </div>
-                        <button onclick="" style="background-color: #28a745; color: white; border: none; padding: 5px 10px; cursor: pointer;">Добавить в корзину</button>
-                    </div>
-                </td>
-                <td style="border: none; padding: 0;">
-                    <div class="product-cell" style="padding: 10px; width: 125px; text-align: center; margin: 0; display: inline-block;">
-                        <img src="../Styles/img/images.jpg" alt="Суши Нигири" style="width: 125px; height: auto;">
-                        <h3 style="font-size: 1.2em;">Суши Нигири</h3>
-                        <p style="font-size: 0.9em;">Суши из красной рыбы, риса и водорослей</p>
-                        <div class="input-group quantity_goods" style="margin: 5px 0;">
-                            <input type="number" step="1" min="1" max="10" value="1" style="width: 50px; text-align: center;">
-                        </div>
-                        <button onclick="" style="background-color: #28a745; color: white; border: none; padding: 5px 10px; cursor: pointer;">Добавить в корзину</button>
-                    </div>
-                </td>
-                <td style="border: none; padding: 0;">
-                    <div class="product-cell" style="padding: 10px; width: 125px; text-align: center; margin: 0; display: inline-block;">
-                        <img src="../Styles/img/kanada-sushi-roll.jpg" alt="Канада суши" style="width: 125px; height: auto;">
-                        <h3 style="font-size: 1.2em;">Канада суши</h3>
-                        <p style="font-size: 0.9em;">Суши из красной рыбы, риса, водорослей, огурца и сливочного соуса</p>
-                        <div class="input-group quantity_goods" style="margin: 5px 0;">
-                            <input type="number" step="1" min="1" max="10" value="1" style="width: 50px; text-align: center;">
-                        </div>
-                        <button onclick="" style="background-color: #28a745; color: white; border: none; padding: 5px 10px; cursor: pointer;">Добавить в корзину</button>
-                    </div>
-                </td>
-                <td style="width: 150px; height: 150px">
-                    <button style="width: 100%; height: 100%; background: white" onclick="document.location.href='https://github.com/DeLucio777/Sushi' ">Тут могла быть ваша реклама</button>
-                </td>
-            </tr>
-        </table>
-        <div id="section2" class="section">
-            <div class="section-title">Напитки</div>
-        </div>
-        <table style="border-collapse: collapse; width: 100%; margin: 0; padding: 0;">
-            <tr>
-                <td style="border: none; padding: 0;">
-                    <div class="product-cell" style="padding: 10px; width: 125px; text-align: center; margin: 0; display: inline-block;">
-                        <img src="../Styles/img/464731543027662.jpg" alt="Канада суши" style="width: 125px; height: auto;">
-                        <h3 style="font-size: 1.2em;">Кока-кола</h3>
-                        <p style="font-size: 0.9em;">Освежающий газированный напиток. 0,5 л</p>
-                        <div class="input-group quantity_goods" style="margin: 5px 0;">
-                            <input type="number" step="1" min="1" max="10" value="1" style="width: 50px; text-align: center;">
-                        </div>
-                        <button onclick="" style="background-color: #28a745; color: white; border: none; padding: 5px 10px; cursor: pointer;">Добавить в корзину</button>
-                    </div>
-                </td>
-            </tr>
-        </table>
-            <!-- <tr>
-                <td style="border: none; padding: 10px;">Элемент 5</td>
-                <td style="border: none; padding: 10px;">Элемент 6</td>
-                <td style="border: none; padding: 10px;">Элемент 7</td>
-                <td style="border: none; padding: 10px;">Элемент 8</td>
-            </tr>
-            <tr>
-                <td style="border: none; padding: 10px;">Элемент 9</td>
-                <td style="border: none; padding: 10px;">Элемент 10</td>
-                <td style="border: none; padding: 10px;">Элемент 11</td>
-                <td style="border: none; padding: 10px;">Элемент 12</td>
-            </tr> -->
-        </table>
 
     </body>
     <script>
         function goToPage(url){
             document.location.href = url
+        }
+        function addToCart(productName) {
+            alert(productName + ' добавлен в корзину!');
+            // Здесь можно добавить логику для обновления корзины
         }
 
         </script>

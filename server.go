@@ -38,52 +38,47 @@ func getUserByInputParamsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
-	sPassword := r.URL.Query().Get("u_name")
-	if sPassword == "" {
+	sName := r.URL.Query().Get("user_name")
+	if sName == "" {
 		http.Error(w, "Параметр имя обязателен", http.StatusBadRequest)
 		return
 	}
-	sName := r.URL.Query().Get("u_password")
-	if sName == "" {
+	sPassword := r.URL.Query().Get("user_password")
+	if sPassword == "" {
 		http.Error(w, "Параметр пароль обязателен", http.StatusBadRequest)
 		return
 	}
 
 	res, err := getUserByInputParams(db, sName, sPassword)
 	if err != nil {
-		http.Error(w, "Ошибка получения данных занятий", http.StatusInternalServerError)
+		http.Error(w, "Ошибка получения данных", http.StatusInternalServerError)
 		return
 	}
-
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(res)
 }
 
-func getUserByInputParams(db *sql.DB, sName string, sPassword string) (bool, error) {
-
+func getUserByInputParams(db *sql.DB, sName string, sPassword string) (*User, error) {
 	query := `SELECT * FROM users WHERE name = $1 AND password = $2`
 
 	rows, err := db.Query(query, sName, sPassword)
 	if err != nil {
-		return false, err
+		return nil, err
 	}
 	defer rows.Close()
-
-	if rows == nil {
-		return false, nil
-	}
+	var user User
 
 	for rows.Next() {
-
-		var user User
 		err := rows.Scan(&user.ID, &user.Name, &user.Password)
+
 		if err != nil {
-			return false, err
+			return nil, err
 		}
+		fmt.Println(user)
 
+		return &user, nil
 	}
-
-	return true, nil
+	return nil, fmt.Errorf("пользователь не найден")
 }
 
 func index(w http.ResponseWriter, r *http.Request) {
