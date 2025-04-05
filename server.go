@@ -75,8 +75,8 @@ func getUserByInputParams(db *sql.DB, sName string, sPassword string) (bool, err
 
 	for rows.Next() {
 
-		var student User
-		err := rows.Scan(&student.ID, &student.Name, &student.Password)
+		var user User
+		err := rows.Scan(&user.ID, &user.Name, &user.Password)
 		if err != nil {
 			return false, err
 		}
