@@ -40,22 +40,21 @@
             alert('пароли не совпадают')
             return
         }
-        alert('/api/user_by_params_set?user_name=' + encodeURIComponent(uName) + '&user_password=' + encodeURIComponent(uPassword))
         try {
+            let str =JSON.stringify({ user_name: uName, user_password: uPassword })
             const response = await fetch('/api/user_by_params?user_name=' + encodeURIComponent(uName) + '&user_password=' + encodeURIComponent(uPassword), {
                 method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
             });
             if (!response.ok) {
-                throw new Error('Ошибка запроса: ' + response.statusText);
+                alert('Ошибка запроса: ' + response.statusText);
+                return
             }
             const data = await response.json();
-            // alert(JSON.stringify(data))
-            let fUser = {
-                name:data.name,
-                password:data.password
-            }
-            // localStorage.setItem('user', JSON.stringify(fUser))
-            document.location.href='../Pages/main.html'
+            alert(JSON.stringify(data))
+         
         } catch (error) {
             console.error('Ошибка:', error);
             alert('Ошибка: ' + error.message);
