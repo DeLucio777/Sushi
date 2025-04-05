@@ -13,30 +13,25 @@
         }
         .navbar {
             margin-bottom: 20px;
+            text-align: center;
         }
-        .dropdown {
-            position: relative;
-            display: inline-block;
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
         }
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: #f9f9f9;
-            min-width: 160px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-            z-index: 1;
-        }
-        .dropdown:hover .dropdown-content {
-            display: block;
-        }
-        .dropdown-content a {
-            color: black;
-            padding: 12px 16px;
+        .nav-links a {
             text-decoration: none;
-            display: block;
+            color: #007bff;
+            font-weight: bold;
+            padding: 10px 15px;
+            border: 1px solid transparent;
+            border-radius: 5px;
+            transition: background-color 0.3s, border-color 0.3s;
         }
-        .dropdown-content a:hover {
-            background-color: #f1f1f1;
+        .nav-links a:hover {
+            background-color: #e9ecef;
+            border-color: #007bff;
         }
         .container {
             max-width: 1200px;
@@ -84,13 +79,11 @@
 
     <h1>Наши товары</h1>
     <div class="navbar">
-        <div class="dropdown">
-            <button>Выберите раздел</button>
-            <div class="dropdown-content">
-                <a href="#electronics">Электроника</a>
-                <a href="#clothing">Одежда</a>
-                <a href="#accessories">Аксессуары</a>
-            </div>
+        <div class="nav-links">
+            <a href="#electronics">Электроника</a>
+            <a href="#clothing">Одежда</a>
+            <a href="#accessories">Аксессуары</a>
+            <a href="#shoes">Обувь</a>
         </div>
     </div>
 
@@ -139,6 +132,22 @@
             <h2>Сумка</h2>
             <p>Описание сумки.</p>
             <button class="add-to-cart" onclick="addToCart('Сумка')">В корзину</button>
+        </div>
+    </div>
+
+    <div id="shoes" class="container">
+        <h2>Обувь</h2>
+        <div class="product">
+            <img src="product7.jpg" alt="Товар 7">
+            <h2>Кроссовки</h2>
+            <p>Описание кроссовок.</p>
+            <button class="add-to-cart" onclick="addToCart('Кроссовки')">В корзину</button>
+        </div>
+        <div class="product">
+            <img src="product8.jpg" alt="Товар 8">
+            <h2>Ботинки</h2>
+            <p>Описание ботинок.</p>
+            <button class="add-to-cart" onclick="addToCart('Ботинки')">В корзину</button>
         </div>
     </div>
 
