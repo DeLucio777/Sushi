@@ -8,18 +8,18 @@
     <link rel="stylesheet" href="/Styles/regstyle.css">
 </head>
 <body class="container">
-<form class="form">
+<form class="form" onsubmit="event.preventDefault(); setData(uname.value, password1.value, password2.value);">
     <p class="form-title">Зарегестрируйте свой аккаунт</p>
     <div class="input-container">
-        <input type="Эл. почта" placeholder="Введите эл. почту">
+        <input type="Эл. почта" placeholder="Введите эл. почту" name="uname" >
         <span>
        </span>
     </div>
     <div class="input-container">
-        <input type="password" placeholder="Введите пароль">
+        <input type="password" placeholder="Введите пароль" name="password1">
     </div>
     <div class="input-container">
-        <input type="password" placeholder="Повторите пароль">
+        <input type="password" placeholder="Повторите пароль" name="password2">
     </div>
     <button type="submit" class="submit">
         Регистрация
@@ -35,6 +35,31 @@
 </form>
 </body>
 <script>
-    
+    async function setData(uName, uPassword, sp) {
+        if (sp != uPassword){
+            alert('пароли не совпадают')
+            return
+        }
+        alert('/api/user_by_params_set?user_name=' + encodeURIComponent(uName) + '&user_password=' + encodeURIComponent(uPassword))
+        try {
+            const response = await fetch('/api/user_by_params?user_name=' + encodeURIComponent(uName) + '&user_password=' + encodeURIComponent(uPassword), {
+                method: 'POST',
+            });
+            if (!response.ok) {
+                throw new Error('Ошибка запроса: ' + response.statusText);
+            }
+            const data = await response.json();
+            // alert(JSON.stringify(data))
+            let fUser = {
+                name:data.name,
+                password:data.password
+            }
+            // localStorage.setItem('user', JSON.stringify(fUser))
+            document.location.href='../Pages/main.html'
+        } catch (error) {
+            console.error('Ошибка:', error);
+            alert('Ошибка: ' + error.message);
+        }
+    }
 </script>
 </html>
