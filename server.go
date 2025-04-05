@@ -69,8 +69,8 @@ func getUserByInputParams(db *sql.DB, sName string, sPassword string) (bool, err
 	}
 	defer rows.Close()
 
-	if !rows.Next() {
-		return false, nil 
+	if rows == nil {
+		return false, nil
 	}
 
 	for rows.Next() {
