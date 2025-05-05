@@ -74,7 +74,7 @@ func getUserByInputParamsHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func getUserByInputParams(db *sql.DB, sName string, sPassword string) (*User, error) {
-	query := `SELECT * FROM users WHERE name = $1 AND password = $2`
+	query := `SELECT * FROM tbl_users WHERE name = $1 AND password = $2`
 
 	rows, err := db.Query(query, sName, sPassword)
 	if err != nil {
