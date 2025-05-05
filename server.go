@@ -30,6 +30,17 @@ func connectDB() (*sql.DB, error) {
 	return db, nil
 }
 
+func userHandler(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case http.MethodGet:
+		getUserByInputParamsHandler(w, r)
+	case http.MethodPost:
+		setUserByInputParamsHandler(w, r)
+	default:
+		http.Error(w, "Метод не поддерживается", http.StatusMethodNotAllowed)
+	}
+}
+
 func getUserByInputParamsHandler(w http.ResponseWriter, r *http.Request) {
 	db, err := connectDB()
 	if err != nil {
@@ -136,7 +147,7 @@ func setUserByInputParamsHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func userExists(db *sql.DB, sName string, sPassword string) (bool, error) {
-	query := `SELECT COUNT(*) FROM users WHERE name = $1 and password = $2`
+	query := `SELECT COUNT(*) FROM tbl_users WHERE name = $1 and password = $2`
 	var count int
 	err := db.QueryRow(query, sName, sPassword).Scan(&count)
 	if err != nil {
@@ -146,7 +157,7 @@ func userExists(db *sql.DB, sName string, sPassword string) (bool, error) {
 }
 
 func insertUser(db *sql.DB, sName string, sPassword string) error {
-	query := `INSERT INTO users (name, password) VALUES ($1, $2)`
+	query := `INSERT INTO tbl_users (name, password) VALUES ($1, $2)`
 	_, err := db.Exec(query, sName, sPassword)
 	return err
 }
@@ -163,8 +174,7 @@ func handleRequest() {
 	http.Handle("/Styles/", http.StripPrefix("/Styles/", http.FileServer(http.Dir("./Styles/"))))
 	http.Handle("/Pages/", http.StripPrefix("/Pages/", http.FileServer(http.Dir("./Pages/"))))
 	http.HandleFunc("/", index)
-	http.HandleFunc("/api/user_by_params", getUserByInputParamsHandler)
-	http.HandleFunc("/api/user_by_params_set", setUserByInputParamsHandler)
+	http.HandleFunc("/api/users", userHandler)
 
 	err := http.ListenAndServe(":8080", nil)
 	if err != nil {
