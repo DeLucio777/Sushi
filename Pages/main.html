@@ -76,6 +76,48 @@
             <!-- Добавьте больше товаров по аналогии -->
         </div>
 
+    <h2 id="rolls">Роллы</h2>
+    <div class="container">
+        <div class="product">
+            <img src="../Styles/img/roll1.jpg" alt="Ролл Калифорния">
+            <h2>Ролл Калифорния</h2>
+            <p>Ролл с крабом, авокадо и огурцом</p>
+            <div class="input-group quantity_goods" style="margin: 5px 0;">
+                <input type="number" step="1" min="1" max="10" value="1" style="width: 50px; text-align: center;">
+            </div>
+            <button class="add-to-cart" onclick="addToCart('Товар 4')">В корзину</button>
+        </div>
+        <!-- Add more rolls products here -->
+    </div>
+
+    <h2 id="drinks">Напитки</h2>
+    <div class="container">
+        <div class="product">
+            <img src="../Styles/img/drink1.jpg" alt="Зеленый чай">
+            <h2>Зеленый чай</h2>
+            <p>Освежающий зеленый чай, 0,5 л</p>
+            <div class="input-group quantity_goods" style="margin: 5px 0;">
+                <input type="number" step="1" min="1" max="10" value="1" style="width: 50px; text-align: center;">
+            </div>
+            <button class="add-to-cart" onclick="addToCart('Товар 5')">В корзину</button>
+        </div>
+        <!-- Add more drinks products here -->
+    </div>
+
+    <h2 id="other">Другое</h2>
+    <div class="container">
+        <div class="product">
+            <img src="../Styles/img/other1.jpg" alt="Соевый соус">
+            <h2>Соевый соус</h2>
+            <p>Классический соевый соус, 250 мл</p>
+            <div class="input-group quantity_goods" style="margin: 5px 0;">
+                <input type="number" step="1" min="1" max="10" value="1" style="width: 50px; text-align: center;">
+            </div>
+            <button class="add-to-cart" onclick="addToCart('Товар 6')">В корзину</button>
+        </div>
+        <!-- Add more other products here -->
+    </div>
+
     </body>
     <script>
         function goToPage(url){
