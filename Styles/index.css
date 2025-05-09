@@ -42,7 +42,10 @@
     color: #ffffff; 
   }
 
-
+h2{
+  align-self: center;
+  text-align: center;
+}
 
 
 .input {
@@ -80,7 +83,7 @@ input:hover {
 
 /*     */
 
-.container {
+.contain {
   max-width: 1000px;
   margin: auto;
   display: flex;
