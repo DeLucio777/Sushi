@@ -116,4 +116,25 @@
 .continue-shopping:hover {
     background-color: #0056b3; /* Цвет фона при наведении */
 }
+.footer {
+    background-color: #333; /* Цвет фона футера */
+    color: white; /* Цвет текста */
+    padding: 20px; /* Отступы внутри футера */
+    text-align: center; /* Центрирование текста */
+    position: fixed; /* Позволяет футеру занимать место в потоке документа */
+    bottom: 0; /* Прикрепляет футер к нижней части страницы */
+    width: 100%; /* Ширина футера на всю ширину экрана */
+}
+
+.footer a {
+    color: white; /* Цвет ссылок */
+    text-decoration: none; /* Убирает подчеркивание у ссылок */
+    margin: 0 10px; /* Отступы между ссылками */
+    text-align: center;
+    cursor: pointer;
+}
+
+.footer a:hover {
+    text-decoration: underline; /* Подчеркивание при наведении на ссылку */
+}
 
