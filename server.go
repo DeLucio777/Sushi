@@ -213,6 +213,80 @@ func getItems(db *sql.DB) ([]Item, error) {
 	return items, nil
 }
 
+func treshHandler(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case http.MethodGet:
+		getTreshHandler(w, r)
+	case http.MethodPost:
+		setThreshHandler(w, r)
+	default:
+		http.Error(w, "Метод не поддерживается", http.StatusMethodNotAllowed)
+	}
+}
+
+func setThreshHandler(w http.ResponseWriter, r *http.Request) {
+	db, err := connectDB()
+	if err != nil {
+		http.Error(w, "Ошибка подключения к базе данных", http.StatusInternalServerError)
+		return
+	}
+	defer db.Close()
+
+	sName := r.URL.Query().Get("user_name")
+	if sName == "" {
+		http.Error(w, "Параметр имя обязателен", http.StatusBadRequest)
+		return
+	}
+	res, err := getTresh(db, sName)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(res)
+}
+
+func getTreshHandler(w http.ResponseWriter, r *http.Request) {
+	db, err := connectDB()
+	if err != nil {
+		http.Error(w, "Ошибка подключения к базе данных", http.StatusInternalServerError)
+		return
+	}
+	defer db.Close()
+
+	sName := r.URL.Query().Get("user_name")
+	if sName == "" {
+		http.Error(w, "Параметр имя обязателен", http.StatusBadRequest)
+		return
+	}
+	res, err := getTresh(db, sName)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(res)
+
+}
+
+func getTresh(db *sql.DB, sName string) ([]Item, error) {
+
+	user_id, err := db.Query("SELECT tbl_item.id, tbl_item.image, tbl_item.description, tbl_item.item_name, tbl_item.cost FROM tbl_item JOIN tbl_users_to_items ON (tbl_item.id = tbl_users_to_items.item_id) JOIN tbl_users ON tbl_users_to_items.user_id = tbl_users.id WHERE tbl_users.name=$1", sName)
+	if err != nil {
+		return nil, err
+	}
+	defer user_id.Close()
+	var items []Item
+	for user_id.Next() {
+		var item Item
+		err = user_id.Scan(&item.ID, &item.Image, &item.Description, &item.Name, &item.Cost)
+		if err != nil {
+			return nil, err
+		}
+		items = append(items, item)
+	}
+	return items, nil
+
+}
+
 func index(w http.ResponseWriter, r *http.Request) {
 	tmpl, err := template.ParseFiles("Pages/main.html")
 	if err != nil {
@@ -228,7 +302,7 @@ func handleRequest() {
 	http.HandleFunc("/", index)
 	http.HandleFunc("/api/users", userHandler)
 	http.HandleFunc("/api/items", itemsHandler)
-
+	http.HandleFunc("/api/tresh", treshHandler)
 	err := http.ListenAndServe(":8080", nil)
 	if err != nil {
 		fmt.Println("connect error")
