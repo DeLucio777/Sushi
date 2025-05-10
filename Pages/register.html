@@ -18,7 +18,7 @@
     <div class="input-container">
         <input type="password" placeholder="Введите пароль" name="password" value="password1">
     </div>
-    <button type="submit" class="submit"">
+    <button type="submit" class="submit">
         Войти
     </button>
 
@@ -35,7 +35,7 @@
     async function checkData(uName, uPassword) {
         // alert('/api/user_by_params?user_name=' + encodeURIComponent(uName) + '&user_password=' + encodeURIComponent(uPassword))
         try {
-            const response = await fetch('/api/user_by_params?user_name=' + encodeURIComponent(uName) + '&user_password=' + encodeURIComponent(uPassword), {
+            const response = await fetch('/api/users?user_name=' + encodeURIComponent(uName) + '&user_password=' + encodeURIComponent(uPassword), {
                 method: 'GET',
             });
             if (!response.ok) {
