@@ -18,7 +18,7 @@
             
             </div>
             <div>
-            <button class="cart-icon" onclick="goToPage('../Pages/index.html')"></button>
+            <button class="cart-icon" onclick="goToPage('../Pages/index.html')"></button><!--TODO:Вай вася тут хуйня полная, нада чтоб корзинка эбучая открывалась толька при зареганом чушпане да-->
             <button class="profile-icon" onclick="goToPage('../Pages/register.html')"></button>
             </div>
         </header>
@@ -116,8 +116,9 @@
     <!-- Добавьте больше напитков здесь -->
 </div>
 
-<h2 id="other">Другое</h2>
-<div class="contain">
+<h2 id="other">Другое</h2><!--TODO: Карч вася сделай мине так чтоб вах прадукт брал ценник с эбучий json-->
+<div class="contain" id="product-container"></div>
+<!-- <div class="contain" id="product-container">
     <div class="product" data-price="100">
         <img src="../Styles/img/other1.jpg" alt="Соевый соус">
         <h2>Соевый соус</h2>
@@ -127,7 +128,7 @@
         </div>
         <p class="total-price">Цена: 100 руб.</p>
         <button class="add-to-cart" onclick="addToCart(this)">В корзину</button>
-    </div>
+    </div> -->
     <footer class="footer">
         <a onclick="document.location.href='https://github.com/DeLucio777/Sushi' ">
             Контакт с нами
@@ -137,7 +138,47 @@
 
     </body>
     <script>
-        function updatePrice(input) {
+        const rolls=[
+        {"id":1,"image":"other1.jpg","description":"Классический соевый соус, 250 мл","item_name":"Соевый соус","cost":19.99}
+        // {"id":2,"image":"image2.jpg","description":"Description for item 2","item_name":"Item 2","cost":29.99},
+        // {"id":3,"image":"image3.jpg","description":"Description for item 3","item_name":"Item 3","cost":39.99},
+        // {"id":4,"image":"image4.jpg","description":"Description for item 4","item_name":"Item 4","cost":49.99}
+    ]
+
+    async function loadSuggestions() {
+        try {
+            const response = await fetch("/api/groups"); // Запрос к вашему API
+            const data = await response.json(); // Предполагаем, что сервер возвращает JSON
+            rolls=data
+           
+        } catch (error) {
+            alert("Ошибка загрузки данных:", error);
+        }
+    }
+    loadSuggestions();
+    function renderProducts() {
+        const container = document.getElementById('product-container');
+
+        rolls.forEach(product => {
+            const productDiv = document.createElement('div');
+            productDiv.classList.add('product');
+            productDiv.setAttribute('data-price', product.cost);
+
+            productDiv.innerHTML = `
+                <img src="${product.image}" alt="${product.item_name}">
+                <h2>${product.item_name}</h2>
+                <p>${product.description}</p>
+                <div class="input-group quantity_goods" style="margin: 5px 0;">
+                    <input type="number" class="quantity" step="1" min="1" value="1" onchange="updatePrice(this)">
+                </div>
+                <p class="total-price">Цена: ${product.cost} руб.</p>
+                <button class="add-to-cart" onclick="addToCart(this)">В корзину</button>
+            `;
+            container.appendChild(productDiv);
+        });
+    }
+
+    function updatePrice(input) {
         const productDiv = input.closest('.product');
         const pricePerUnit = parseFloat(productDiv.getAttribute('data-price'));
         const quantity = parseInt(input.value);
@@ -155,22 +196,31 @@
         alert(`${productName} добавлен в корзину. Количество: ${quantity}. Общая цена: ${totalPrice} руб.`);
     }
 
+    renderProducts();
+    /////////////////////////////////////
+
+    //     function updatePrice(input) { ///а тут вася чтоб нормальна цениик обновлялся биля
+    //     const productDiv = input.closest('.product');
+    //     const pricePerUnit = parseFloat(productDiv.getAttribute('data-price'));
+    //     const quantity = parseInt(input.value);
+    //     const totalPrice = pricePerUnit * quantity;
+    //     productDiv.querySelector('.total-price').innerText = `Цена: ${totalPrice} руб.`;
+    // }
+
+    // function addToCart(button) { ///TODO: вай биля тут карочи нада чтоб товары в карзину падали да
+    //     const productDiv = button.closest('.product');
+    //     const productName = productDiv.querySelector('h2').innerText;
+    //     const quantity = productDiv.querySelector('.quantity').value;
+    //     const pricePerUnit = parseFloat(productDiv.getAttribute('data-price'));
+    //     const totalPrice = pricePerUnit * quantity;
+
+    //     alert(`${productName} добавлен в корзину. Количество: ${quantity}. Общая цена: ${totalPrice} руб.`);
+    // }
 
 
 
-
-
-
-
-
-
-/////////
         function goToPage(url){
             document.location.href = url
-        }
-        function addToCart(productName) {
-            alert(productName + ' добавлен в корзину!');
-            // Здесь можно добавить логику для обновления корзины
         }
 
         </script>
