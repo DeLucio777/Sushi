@@ -96,8 +96,45 @@
     transition: background-color 0.3s;
     display: block;
     margin: 0 auto;
+    margin-top: 5px;
 }
 
 .checkout-button:hover {
     background-color: #0056b3;
 }
+
+.continue-shopping {
+    background-color: #007bff; /* Цвет фона */
+    color: white; /* Цвет текста */
+    border: none; /* Убирает рамку */
+    padding: 10px 20px; /* Отступы */
+    border-radius: 5px; /* Закругленные углы */
+    cursor: pointer; /* Указатель при наведении */
+    transition: background-color 0.3s; /* Плавный переход цвета */
+}
+
+.continue-shopping:hover {
+    background-color: #0056b3; /* Цвет фона при наведении */
+}
+.footer {
+    background-color: #333; /* Цвет фона футера */
+    color: white; /* Цвет текста */
+    padding: 20px; /* Отступы внутри футера */
+    text-align: center; /* Центрирование текста */
+    position: fixed; /* Позволяет футеру занимать место в потоке документа */
+    bottom: 0; /* Прикрепляет футер к нижней части страницы */
+    width: 100%; /* Ширина футера на всю ширину экрана */
+}
+
+.footer a {
+    color: white; /* Цвет ссылок */
+    text-decoration: none; /* Убирает подчеркивание у ссылок */
+    margin: 0 10px; /* Отступы между ссылками */
+    text-align: center;
+    cursor: pointer;
+}
+
+.footer a:hover {
+    text-decoration: underline; /* Подчеркивание при наведении на ссылку */
+}
+

@@ -21,6 +21,32 @@
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     z-index: 1000;
   }
+  .footer {
+    background-color: #333; /* Цвет фона футера */
+    color: white; /* Цвет текста */
+    padding: 20px; /* Отступы внутри футера */
+    text-align: center; /* Центрирование текста */
+    position: relative; /* Позволяет футеру занимать место в потоке документа */
+    bottom: 0; /* Прикрепляет футер к нижней части страницы */
+    width: 100%; /* Ширина футера на всю ширину экрана */
+}
+
+.footer a {
+    color: white; /* Цвет ссылок */
+    text-decoration: none; /* Убирает подчеркивание у ссылок */
+    margin: 0 10px; /* Отступы между ссылками */
+    text-align: center;
+    cursor: pointer;
+}
+
+.footer a:hover {
+    text-decoration: underline; /* Подчеркивание при наведении на ссылку */
+}
+
+.footer p {
+    margin: 10px 0; /* Отступы для параграфов */
+}
+
   .top-panel .profile-icon {
     margin-right: 40px;
     width: 30px;
@@ -34,9 +60,10 @@
     
   }
   .top-panel .cart-icon {
-    margin-right: -430px;
     width: 30px;
     height: 30px;
+    margin-right: 10px;
+    position: relative;
     /*background-image: url('/Styles/img/user.png');*/
     background-image: url('../Styles/img/cart.png'); 
     background-size: cover;

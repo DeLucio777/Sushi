@@ -3,160 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Интернет-магазин</title>
+    <title>Магазин</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 20px;
-        }
-        .navbar {
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        .nav-links {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-        }
-        .nav-links a {
-            text-decoration: none;
-            color: #007bff;
-            font-weight: bold;
-            padding: 10px 15px;
-            border: 1px solid transparent;
-            border-radius: 5px;
-            transition: background-color 0.3s, border-color 0.3s;
-        }
-        .nav-links a:hover {
-            background-color: #e9ecef;
-            border-color: #007bff;
-        }
-        .container {
-            max-width: 1200px;
-            margin: auto;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
         .product {
-            background: white;
             border: 1px solid #ddd;
             border-radius: 5px;
-            padding: 15px;
+            padding: 10px;
+            margin: 10px;
             text-align: center;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            width: calc(33.333% - 20px);
         }
-        .product img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 5px;
+        .input-group {
+            margin: 5px 0;
         }
-        .product h2 {
-            font-size: 1.5em;
-            margin: 10px 0;
-        }
-        .product p {
-            color: #555;
-        }
-        .add-to-cart {
-            background-color: #28a745;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        .add-to-cart:hover {
-            background-color: #218838;
+        .total-price {
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
 
-    <h1>Наши товары</h1>
-    <div class="navbar">
-        <div class="nav-links">
-            <a href="#electronics">Электроника</a>
-            <a href="#clothing">Одежда</a>
-            <a href="#accessories">Аксессуары</a>
-            <a href="#shoes">Обувь</a>
-        </div>
-    </div>
+<h2 id="other">Другое</h2>
+<div class="contain" id="product-container"></div>
 
-    <div id="electronics" class="container">
-        <h2>Электроника</h2>
-        <div class="product">
-            <img src="product1.jpg" alt="Товар 1">
-            <h2>Смартфон</h2>
-            <p>Описание смартфона.</p>
-            <button class="add-to-cart" onclick="addToCart('Смартфон')">В корзину</button>
-        </div>
-        <div class="product">
-            <img src="product2.jpg" alt="Товар 2">
-            <h2>Ноутбук</h2>
-            <p>Описание ноутбука.</p>
-            <button class="add-to-cart" onclick="addToCart('Ноутбук')">В корзину</button>
-        </div>
-    </div>
+<script>
+    const products = [
+        {"id":1,"image":"../Styles/img/image1.jpg","description":"Соевый соус","item_name":"Соевый соус","cost":100},
+        {"id":2,"image":"../Styles/img/image2.jpg","description":"Напиток 1","item_name":"Напиток 1","cost":150},
+        {"id":3,"image":"../Styles/img/image3.jpg","description":"Напиток 2","item_name":"Напиток 2","cost":200},
+        {"id":4,"image":"../Styles/img/image4.jpg","description":"Напиток 3","item_name":"Напиток 3","cost":250}
+    ];
 
-    <div id="clothing" class="container">
-        <h2>Одежда</h2>
-        <div class="product">
-            <img src="product3.jpg" alt="Товар 3">
-            <h2>Футболка</h2>
-            <p>Описание футболки.</p>
-            <button class="add-to-cart" onclick="addToCart('Футболка')">В корзину</button>
-        </div>
-        <div class="product">
-            <img src="product4.jpg" alt="Товар 4">
-            <h2>Джинсы</h2>
-            <p>Описание джинсов.</p>
-            <button class="add-to-cart" onclick="addToCart('Джинсы')">В корзину</button>
-        </div>
-    </div>
+    function renderProducts() {
+        const container = document.getElementById('product-container');
+        products.forEach(product => {
+            const productDiv = document.createElement('div');
+            productDiv.classList.add('product');
+            productDiv.setAttribute('data-price', product.cost);
 
-    <div id="accessories" class="container">
-        <h2>Аксессуары</h2>
-        <div class="product">
-            <img src="product5.jpg" alt="Товар 5">
-            <h2>Часы</h2>
-            <p>Описание часов.</p>
-            <button class="add-to-cart" onclick="addToCart('Часы')">В корзину</button>
-        </div>
-        <div class="product">
-            <img src="product6.jpg" alt="Товар 6">
-            <h2>Сумка</h2>
-            <p>Описание сумки.</p>
-            <button class="add-to-cart" onclick="addToCart('Сумка')">В корзину</button>
-        </div>
-    </div>
+            productDiv.innerHTML = `
+                <img src="${product.image}" alt="${product.item_name}">
+                <h2>${product.item_name}</h2>
+                <p>${product.description}</p>
+                <div class="input-group quantity_goods" style="margin: 5px 0;">
+                    <input type="number" class="quantity" step="1" min="1" value="1" onchange="updatePrice(this)">
+                </div>
+                <p class="total-price">Цена: ${product.cost} руб.</p>
+                <button class="add-to-cart" onclick="addToCart(this)">В корзину</button>
+            `;
+            container.appendChild(productDiv);
+        });
+    }
 
-    <div id="shoes" class="container">
-        <h2>Обувь</h2>
-        <div class="product">
-            <img src="product7.jpg" alt="Товар 7">
-            <h2>Кроссовки</h2>
-            <p>Описание кроссовок.</p>
-            <button class="add-to-cart" onclick="addToCart('Кроссовки')">В корзину</button>
-        </div>
-        <div class="product">
-            <img src="product8.jpg" alt="Товар 8">
-            <h2>Ботинки</h2>
-            <p>Описание ботинок.</p>
-            <button class="add-to-cart" onclick="addToCart('Ботинки')">В корзину</button>
-        </div>
-    </div>
+    function updatePrice(input) {
+        const productDiv = input.closest('.product');
+        const pricePerUnit = parseFloat(productDiv.getAttribute('data-price'));
+        const quantity = parseInt(input.value);
+        const totalPrice = pricePerUnit * quantity;
+        productDiv.querySelector('.total-price').innerText = `Цена: ${totalPrice} руб.`;
+    }
 
-    <script>
-        function addToCart(productName) {
-            alert(productName + ' добавлен в корзину!');
-            // Здесь можно добавить логику для обновления корзины
-        }
-    </script>
+    function addToCart(button) {
+        const productDiv = button.closest('.product');
+        const productName = productDiv.querySelector('h2').innerText;
+        const quantity = productDiv.querySelector('.quantity').value;
+        const pricePerUnit = parseFloat(productDiv.getAttribute('data-price'));
+        const totalPrice = pricePerUnit * quantity;
+
+        alert(`${productName} добавлен в корзину. Количество: ${quantity}. Общая цена: ${totalPrice} руб.`);
+    }
+
+    // Вызов функции для отображения продуктов
+    renderProducts();
+</script>
 
 </body>
 </html>
