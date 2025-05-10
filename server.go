@@ -203,8 +203,7 @@ func getItems(db *sql.DB) ([]Item, error) {
 	var items []Item
 	for rows.Next() {
 		var item Item
-		var temp int
-		err = rows.Scan(&item.ID, &item.Image, &item.Description, &item.Name, &item.Cost, &temp)
+		err = rows.Scan(&item.ID, &item.Image, &item.Description, &item.Name, &item.Cost)
 		if err != nil {
 			return nil, err
 		}
