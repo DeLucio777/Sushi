@@ -14,6 +14,13 @@ type User struct {
 	Name     string `json:"name"`
 	Password string `json:"password"`
 }
+type Item struct {
+	ID          int     `json:"id"`
+	Image       string  `json:"image"`
+	Description string  `json:"description"`
+	Name        string  `json:"item_name"`
+	Cost        float64 `json:"cost"`
+}
 
 func connectDB() (*sql.DB, error) {
 	connStr := "host=localhost port=5432 user=postgres password=postgres dbname=postgres sslmode=disable"
@@ -161,6 +168,51 @@ func insertUser(db *sql.DB, sName string, sPassword string) error {
 	_, err := db.Exec(query, sName, sPassword)
 	return err
 }
+
+func itemsHandler(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case http.MethodGet:
+		getItemsHandler(w, r)
+	default:
+		http.Error(w, "Метод не поддерживается", http.StatusMethodNotAllowed)
+	}
+}
+func getItemsHandler(w http.ResponseWriter, r *http.Request) {
+	db, err := connectDB()
+	if err != nil {
+		http.Error(w, "Ошибка подключения к базе данных", http.StatusInternalServerError)
+		return
+	}
+	defer db.Close()
+	result, err := getItems(db)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(result)
+}
+
+func getItems(db *sql.DB) ([]Item, error) {
+	query := `SELECT * FROM tbl_item`
+	rows, err := db.Query(query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Item
+	for rows.Next() {
+		var item Item
+		var temp int
+		err = rows.Scan(&item.ID, &item.Image, &item.Description, &item.Name, &item.Cost, &temp)
+		if err != nil {
+			return nil, err
+		}
+		items = append(items, item)
+	}
+	return items, nil
+}
+
 func index(w http.ResponseWriter, r *http.Request) {
 	tmpl, err := template.ParseFiles("Pages/main.html")
 	if err != nil {
@@ -175,6 +227,7 @@ func handleRequest() {
 	http.Handle("/Pages/", http.StripPrefix("/Pages/", http.FileServer(http.Dir("./Pages/"))))
 	http.HandleFunc("/", index)
 	http.HandleFunc("/api/users", userHandler)
+	http.HandleFunc("/api/items", itemsHandler)
 
 	err := http.ListenAndServe(":8080", nil)
 	if err != nil {

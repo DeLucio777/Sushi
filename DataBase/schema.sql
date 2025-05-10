@@ -1,20 +1,25 @@
-﻿
-
-DROP TABLE IF EXISTS tbl_users;
+﻿DROP TABLE IF EXISTS tbl_users;
+DROP TABLE IF EXISTS tbl_tresh;
 DROP TABLE IF EXISTS tbl_item;
 
 CREATE TABLE IF NOT EXISTS tbl_users(
     ID SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL
-    
 );
 
+CREATE TABLE IF NOT EXISTS tbl_tresh(
+    ID SERIAL PRIMARY KEY,
+    user_id INT REFERENCES tbl_users(ID) ON DELETE CASCADE,
+    items_count INT NOT NULL
+
+);
 
 CREATE TABLE IF NOT EXISTS tbl_item(
     ID SERIAL PRIMARY KEY,
     image VARCHAR(255) NOT NULL,
     description VARCHAR(255) NOT NULL,
     item_name VARCHAR(255) NOT NULL,
-    cost FLOAT NOT NULL
+    cost FLOAT NOT NULL,
+    FK_tresh_ID INT REFERENCES tbl_tresh(ID) ON DELETE SET NULL
 );
