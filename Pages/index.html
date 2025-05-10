@@ -23,6 +23,11 @@
                 <div>
                     <h2>Название продукта</h2>
                     <p>Цена: 1000 руб.</p>
+                    <div class="quantity-controls">
+                        <button onclick="updateQuantity(1, -1)">-</button>
+                        <input type="number" id="quantity-1" value="1" min="1" style="width: 40px; text-align: center;">
+                        <button onclick="updateQuantity(1, 1)">+</button>
+                    </div>
                 </div>
                 <button class="remove-item">Удалить</button>
             </div>
@@ -32,6 +37,11 @@
                 <div>
                     <h2>Название продукта</h2>
                     <p>Цена: 1500 руб.</p>
+                    <div class="quantity-controls">
+                        <button onclick="updateQuantity(1, -1)">-</button>
+                        <input type="number" id="quantity-1" value="1" min="1" style="width: 40px; text-align: center;">
+                        <button onclick="updateQuantity(1, 1)">+</button>
+                    </div>
                 </div>
                 <button class="remove-item">Удалить</button>
             </div>
@@ -43,6 +53,18 @@
 <script>
     function goToPage(url){
             document.location.href = url
+        }
+        function updateQuantity(itemId, change) {
+            const quantityInput = document.getElementById(`quantity-${itemId}`);
+            let currentQuantity = parseInt(quantityInput.value);
+            currentQuantity += change;
+
+            if (currentQuantity < 1) {
+                currentQuantity = 1; // Минимальное количество 1
+            }
+
+            quantityInput.value = currentQuantity;
+            // Здесь можно добавить логику для обновления общей стоимости
         }
 </script>
 </html>

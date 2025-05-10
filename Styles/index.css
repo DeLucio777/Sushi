@@ -60,9 +60,9 @@
     
   }
   .top-panel .cart-icon {
-    margin-right: -430px;
     width: 30px;
     height: 30px;
+    position: relative;
     /*background-image: url('/Styles/img/user.png');*/
     background-image: url('../Styles/img/cart.png'); 
     background-size: cover;
