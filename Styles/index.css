@@ -33,6 +33,17 @@
     cursor: pointer;
     
   }
+  .top-panel .cart-icon {
+    margin-right: -430px;
+    width: 30px;
+    height: 30px;
+    /*background-image: url('/Styles/img/user.png');*/
+    background-image: url('../Styles/img/cart.png'); 
+    background-size: cover;
+    background-position: center;
+    cursor: pointer;
+    
+  }
 
 
     .custom-font {
@@ -42,7 +53,10 @@
     color: #ffffff; 
   }
 
-
+h2{
+  align-self: center;
+  text-align: center;
+}
 
 
 .input {
@@ -80,7 +94,7 @@ input:hover {
 
 /*     */
 
-.container {
+.contain {
   max-width: 1000px;
   margin: auto;
   display: flex;
