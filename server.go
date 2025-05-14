@@ -40,10 +40,13 @@ func connectDB() (*sql.DB, error) {
 func userHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodGet:
+		fmt.Println("do1")
 		getUserByInputParamsHandler(w, r)
 	case http.MethodPost:
 		setUserByInputParamsHandler(w, r)
 	default:
+		fmt.Println("do2")
+
 		http.Error(w, "Метод не поддерживается", http.StatusMethodNotAllowed)
 	}
 }
@@ -66,7 +69,7 @@ func getUserByInputParamsHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Параметр пароль обязателен", http.StatusBadRequest)
 		return
 	}
-
+	fmt.Println(sName, sPassword)
 	res, err := getUserByInputParams(db, sName, sPassword)
 	if err != nil {
 		http.Error(w, "Ошибка получения данных", http.StatusInternalServerError)
