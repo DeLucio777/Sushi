@@ -159,7 +159,7 @@
 </body>
 <script>
     let rolls = [];
-
+    let user;
     async function loadSuggestions() {
         try {
             const response = await fetch('/api/items', {

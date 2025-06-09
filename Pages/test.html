@@ -5,76 +5,94 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Магазин</title>
     <style>
-        .product {
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            padding: 10px;
-            margin: 10px;
-            text-align: center;
-        }
-        .input-group {
-            margin: 5px 0;
-        }
-        .total-price {
-            font-weight: bold;
-        }
+        
     </style>
 </head>
 <body>
 
-<h2 id="other">Другое</h2>
-<div class="contain" id="product-container"></div>
+<button onclick="openOrderModal()">Оформить заказ</button>
+
+<div id="orderModal" class="modal" style="display:none;">
+    <div class="modal-content">
+        <span onclick="closeOrderModal()" class="close">&times;</span>
+        <h2>Оформление заказа</h2>
+        
+        <form id="orderForm">
+            <label>Адрес доставки:</label>
+            <input type="text" id="deliveryAddress" required>
+            
+            <label>Номер телефона:</label>
+            <input type="tel" id="phoneNumber" required>
+            
+            <label>Способ оплаты:</label>
+            <select id="paymentMethod">
+                <option value="cash">Наличными</option>
+                <option value="card">Картой</option>
+            </select>
+            
+            <label>Комментарий к заказу:</label>
+            <textarea id="orderComment"></textarea>
+            
+            <button type="submit">Подтвердить заказ</button>
+        </form>
+    </div>
+</div>
 
 <script>
-    const products = [
-        {"id":1,"image":"../Styles/img/image1.jpg","description":"Соевый соус","item_name":"Соевый соус","cost":100},
-        {"id":2,"image":"../Styles/img/image2.jpg","description":"Напиток 1","item_name":"Напиток 1","cost":150},
-        {"id":3,"image":"../Styles/img/image3.jpg","description":"Напиток 2","item_name":"Напиток 2","cost":200},
-        {"id":4,"image":"../Styles/img/image4.jpg","description":"Напиток 3","item_name":"Напиток 3","cost":250}
-    ];
+function openOrderModal() {
+    document.getElementById('orderModal').style.display = 'block';
+}
 
-    function renderProducts() {
-        const container = document.getElementById('product-container');
-        products.forEach(product => {
-            const productDiv = document.createElement('div');
-            productDiv.classList.add('product');
-            productDiv.setAttribute('data-price', product.cost);
+function closeOrderModal() {
+    document.getElementById('orderModal').style.display = 'none';
+}
 
-            productDiv.innerHTML = `
-                <img src="${product.image}" alt="${product.item_name}">
-                <h2>${product.item_name}</h2>
-                <p>${product.description}</p>
-                <div class="input-group quantity_goods" style="margin: 5px 0;">
-                    <input type="number" class="quantity" step="1" min="1" value="1" onchange="updatePrice(this)">
-                </div>
-                <p class="total-price">Цена: ${product.cost} руб.</p>
-                <button class="add-to-cart" onclick="addToCart(this)">В корзину</button>
-            `;
-            container.appendChild(productDiv);
-        });
-    }
-
-    function updatePrice(input) {
-        const productDiv = input.closest('.product');
-        const pricePerUnit = parseFloat(productDiv.getAttribute('data-price'));
-        const quantity = parseInt(input.value);
-        const totalPrice = pricePerUnit * quantity;
-        productDiv.querySelector('.total-price').innerText = `Цена: ${totalPrice} руб.`;
-    }
-
-    function addToCart(button) {
-        const productDiv = button.closest('.product');
-        const productName = productDiv.querySelector('h2').innerText;
-        const quantity = productDiv.querySelector('.quantity').value;
-        const pricePerUnit = parseFloat(productDiv.getAttribute('data-price'));
-        const totalPrice = pricePerUnit * quantity;
-
-        alert(`${productName} добавлен в корзину. Количество: ${quantity}. Общая цена: ${totalPrice} руб.`);
-    }
-
-    // Вызов функции для отображения продуктов
-    renderProducts();
+document.getElementById('orderForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const orderData = {
+        deliveryAddress: document.getElementById('deliveryAddress').value,
+        phoneNumber: document.getElementById('phoneNumber').value,
+        paymentMethod: document.getElementById('paymentMethod').value,
+        orderComment: document.getElementById('orderComment').value
+    };
+    
+    // Здесь можно добавить логику отправки данных на сервер
+    console.log('Данные заказа:', orderData);
+    
+    closeOrderModal();
+});
 </script>
+
+<style>
+.modal {
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 500px;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+</style>
 
 </body>
 </html>

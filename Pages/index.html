@@ -6,6 +6,42 @@
     <title>Корзина</title>
     <link rel="stylesheet" href="../Styles/cart.css">
 </head>
+<style>
+    .modal {
+    color: #555;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+    justify-content: center;
+    justify-items: center;
+    text-align: center;
+    background-color: #313131;
+
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    border: 1px solid #888;
+    width: 70%;
+    height: 200px;
+    width: 500px;
+    padding: 30px;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+</style>
 <body class="container" text="white">
 
     <br>
@@ -47,8 +83,34 @@
             </div>
         </div>
         <div class="total-price">Итого: 2500 руб.</div>
-        <button class="checkout-button">Оформить заказ</button>
+        <button class="checkout-button" onclick="openOrderModal()">Оформить заказ</button>
         <button class="checkout-button" onclick="goToPage('../Pages/main.html')">Продолжить покупки</button>
+
+<div id="orderModal" class="modal" style="display:none;">
+    <div class="modal-content">
+        <span onclick="closeOrderModal()" class="close">&times;</span>
+        <h2>Оформление заказа</h2>
+        
+        <form id="orderForm">
+            <label>Адрес доставки:</label>
+            <input type="text" id="deliveryAddress" required>
+            <br>
+            <label>Номер телефона:</label>
+            <input type="tel" id="phoneNumber" required>
+            <br>
+            <label>Способ оплаты:</label>
+            <select id="paymentMethod">
+                <option value="cash">Наличными</option>
+                <option value="card">Картой</option>
+            </select>
+            <br>
+            <label>Комментарий к заказу:</label>
+            <textarea id="orderComment"></textarea>
+            <br>
+            <button type="submit">Подтвердить заказ</button>
+        </form>
+    </div>
+</div>
         
 </body>
 <footer class="footer">
@@ -72,7 +134,31 @@
             }
 
             quantityInput.value = currentQuantity;
+
             // Здесь можно добавить логику для обновления общей стоимости
         }
+        function openOrderModal() {
+    document.getElementById('orderModal').style.display = 'block';
+}
+
+function closeOrderModal() {
+    document.getElementById('orderModal').style.display = 'none';
+}
+
+document.getElementById('orderForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const orderData = {
+        deliveryAddress: document.getElementById('deliveryAddress').value,
+        phoneNumber: document.getElementById('phoneNumber').value,
+        paymentMethod: document.getElementById('paymentMethod').value,
+        orderComment: document.getElementById('orderComment').value
+    };
+    
+    // Здесь можно добавить логику отправки данных на сервер
+    console.log('Данные заказа:', orderData);
+    
+    closeOrderModal();
+});
 </script>
 </html>
