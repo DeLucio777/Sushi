@@ -14,7 +14,8 @@ CREATE TABLE IF NOT EXISTS tbl_item(
     image VARCHAR(255) NOT NULL,
     description VARCHAR(255) NOT NULL,
     item_name VARCHAR(255) NOT NULL,
-    cost FLOAT NOT NULL);
+    cost FLOAT NOT NULL,
+    item_type INT NOT NULL);
 
 CREATE TABLE IF NOT EXISTS tbl_users_to_items(
     ID SERIAL PRIMARY KEY,
