@@ -41,12 +41,11 @@
             return
         }
         try {
+            alert('/api/user_by_params?user_name=' + encodeURIComponent(uName) + '&user_password=' + encodeURIComponent(uPassword))
             let str =JSON.stringify({ user_name: uName, user_password: uPassword })
-            const response = await fetch('/api/user_by_params?user_name=' + encodeURIComponent(uName) + '&user_password=' + encodeURIComponent(uPassword), {
+            const response = await fetch('/api/users?user_name=' + encodeURIComponent(uName) + '&user_password=' + encodeURIComponent(uPassword), {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+
             });
             if (!response.ok) {
                 alert('Ошибка запроса: ' + response.statusText);
