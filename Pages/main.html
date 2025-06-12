@@ -161,6 +161,7 @@
 <script>
     let rolls = [];
     let user = [];
+    // let isLoggedIn = true;
     let isLoggedIn;
 
 async function loadSuggestions() {
@@ -194,6 +195,7 @@ async function loadSuggestions() {
         alert("Ошибка загрузки данных: " + error);
     }
 }
+
 
 function displayItems(items) {
     // Очистка всех контейнеров перед добавлением новых предметов
@@ -233,33 +235,24 @@ function displayItems(items) {
         }
     });
 }
+
+async function loadUsers() {
+    try {
+        const storedUser = localStorage.getItem('user');
+        if (storedUser) {
+        user = JSON.parse(storedUser);
+        }
+    } catch (error) {
+        alert("Ошибка загрузки данных или пользователь не авторизован: " + error);
+    }
+}
  async function main(){
-    await loadSuggestions();    
+    await loadSuggestions();  
+    await loadUsers();  
     isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
  }
 window.onload = main;
-    // function renderProducts() {
-    //     const container = document.getElementById('product-container');
 
-
-    //     rolls.forEach(product => {
-    //         const productDiv = document.createElement('div');
-    //         productDiv.classList.add('product');
-    //         productDiv.setAttribute('data-price', product.cost);
-
-    //         productDiv.innerHTML = `
-    //             <img src="${product.image}" alt="${product.item_name}">
-    //             <h2>${product.item_name}</h2>
-    //             <p>${product.description}</p>
-    //             <div class="input-group quantity_goods" style="margin: 5px 0;">
-    //                 <input type="number" class="quantity" step="1" min="1" value="1" onchange="updatePrice(this)">
-    //             </div>
-    //             <p class="total-price">Цена: ${product.cost} руб.</p>
-    //             <button class="add-to-cart" onclick="addToCart(this)">В корзину</button>
-    //         `;
-    //         container.appendChild(productDiv);
-    //     });
-    // }
     function addToCart(button) {
         const productDiv = button.closest('.product');
         const productName = productDiv.querySelector('h2').innerText;
@@ -270,15 +263,7 @@ window.onload = main;
         alert(`${productName} добавлен в корзину. Количество: ${quantity}. Общая цена: ${totalPrice} руб.`);
     }
 
-    /////////////////////////////////////
-
-    //     function updatePrice(input) { ///а тут вася чтоб нормальна цениик обновлялся биля
-    //     const productDiv = input.closest('.product');
-    //     const pricePerUnit = parseFloat(productDiv.getAttribute('data-price'));
-    //     const quantity = parseInt(input.value);
-    //     const totalPrice = pricePerUnit * quantity;
-    //     productDiv.querySelector('.total-price').innerText = `Цена: ${totalPrice} руб.`;
-    // }
+   
 
     // function addToCart(button) { ///TODO: вай биля тут карочи нада чтоб товары в карзину падали да
     //     const productDiv = button.closest('.product');
@@ -287,7 +272,7 @@ window.onload = main;
     //     const pricePerUnit = parseFloat(productDiv.getAttribute('data-price'));
     //     const totalPrice = pricePerUnit * quantity;
 
-    //     alert(`${productName} добавлен в корзину. Количество: ${quantity}. Общая цена: ${totalPrice} руб.`);
+    //     alert(`${productName} добавлен в корзину. Количество: ${quantity}. `);
     // }
 
 
@@ -306,8 +291,8 @@ window.onload = main;
             document.location.href = url
             return;
         }
-        document.location.href = url
-        alert('Пользователь уже авторизован!');
+        alert(`Добро пожаловать ${user.name}!`);
+        
 
     }
 
