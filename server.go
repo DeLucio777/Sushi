@@ -51,7 +51,15 @@ func itemsHandel(w http.ResponseWriter, r *http.Request) {
 }
 
 func userToItemsHandel(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case http.MethodGet:
+		getItemsToUsersHandel(w, r)
+	case http.MethodPost:
+	case http.MethodDelete:
 
+	default:
+		http.Error(w, "Метод не поддерживается", http.StatusMethodNotAllowed)
+	}
 }
 
 func getItemsHandel(w http.ResponseWriter, r *http.Request) {
@@ -127,6 +135,44 @@ func setUserHandel(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(nil)
 }
 
+func getItemsToUsersHandel(w http.ResponseWriter, r *http.Request) {
+	db, err := connectDB()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	defer db.Close()
+
+	rows, err := db.Query("SELECT ID, user_id, item_id FROM tbl_users_to_items")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	defer rows.Close()
+
+	var usersToItems []UsersToItems
+	for rows.Next() {
+		var itemId int
+		var userToItem UsersToItems
+		err := rows.Scan(&userToItem.Id, &userToItem.UserId, &itemId)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		var items []Item
+		itemsRows, err := db.Query("SELECT id, user_id, item_id FROM tbl_users_to_items")
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		defer rows.Close()
+		usersToItems = append(usersToItems, userToItem)
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(usersToItems)
+}
+
 func connectDB() (*sql.DB, error) {
 	connStr := "host=localhost port=5432 user=postgres password=postgres dbname=postgres sslmode=disable"
 	db, err := sql.Open("postgres", connStr)
@@ -157,7 +203,7 @@ func handleRequest() {
 	http.HandleFunc("/", index)
 	http.HandleFunc("/api/items", itemsHandel)
 	http.HandleFunc("/api/users", userHandel)
-	http.HandleFunc("/api/items_to_users", itemsHandel)
+	http.HandleFunc("/api/items_to_users", userToItemsHandel)
 	err := http.ListenAndServe(":8080", nil)
 	if err != nil {
 		fmt.Println("connect error")
