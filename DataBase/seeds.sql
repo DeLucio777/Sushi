@@ -11,3 +11,4 @@ VALUES (1, 1), -- Alice owns Item 1
        (1, 2), -- Alice owns Item 2
        (2, 3), -- Bob owns Item 3
        (3, 1); -- Charlie owns Item 1
+select * from tbl_users

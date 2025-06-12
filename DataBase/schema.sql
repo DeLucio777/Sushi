@@ -24,8 +24,7 @@ CREATE TABLE tbl_users_to_items
 (
     ID         SERIAL PRIMARY KEY,
     user_id    INT REFERENCES tbl_users (ID) ON DELETE SET NULL,
-    item_id    INT REFERENCES tbl_item (ID) ON DELETE SET NULL,
-    item_count INT NOT NULL
+    item_id    INT REFERENCES tbl_item (ID) ON DELETE SET NULL
 );
 
 
