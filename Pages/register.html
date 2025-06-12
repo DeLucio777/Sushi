@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="/Styles/regstyle.css">
 </head>
 <body class="container">
-<form class="form" onsubmit="event.preventDefault(); checkData(uname.value, password.value);">
+<div class="form">
     <p class="form-title">Войдите в свой аккаунт</p>
     <div class="input-container">
         <input type="Эл. почта" placeholder="Введите эл. почту" id="uName" name="uname" value="name1">
@@ -16,9 +16,9 @@
        </span>
     </div>
     <div class="input-container">
-        <input type="password" placeholder="Введите пароль" name="password" value="password1">
+        <input type="password" placeholder="Введите пароль" name="password" value="password1" id="pas">
     </div>
-    <button type="submit" class="submit">
+    <button type="submit" class="submit" onclick="test()">
         Войти
     </button>
 
@@ -29,11 +29,17 @@
     <p class="back-link">
         <a href="../Pages/main.html">Назад</a>
     </p>
-</form>
+</div>
 </body>
 <script>
-    async function checkData(uName, uPassword) {
-        // alert('/api/user_by_params?user_name=' + encodeURIComponent(uName) + '&user_password=' + encodeURIComponent(uPassword))
+    function test(){
+        let uName=document.getElementById('uName').value
+        let uPassword=document.getElementById('pas').value
+        alert(uName+' '+uPassword)
+    }
+    async function checkData() {
+
+ 
         try {
 
             const response = await fetch('/api/users?user_name=' + encodeURIComponent(uName) + '&user_password=' + encodeURIComponent(uPassword), {
@@ -43,17 +49,23 @@
                 throw new Error('Ошибка запроса: ' + response.statusText);
             }
             const data = await response.json();
-            // alert(JSON.stringify(data))
-            let fUser = {
-                name:data.name,
-                password:data.password
+
+            // Проверка наличия данных
+            if (data && data.name && data.password) {
+                let fUser = {
+                    name: data.name,
+                    password: data.password
+                };
+                localStorage.setItem('user', JSON.stringify(fUser)); // Раскомментируйте, если нужно сохранить пользователя
+                document.location.href = '../Pages/main.html';
+            } else {
+                throw new Error('Данные пользователя не найдены');
             }
-            // localStorage.setItem('user', JSON.stringify(fUser))
-            document.location.href='../Pages/main.html'
         } catch (error) {
             console.error('Ошибка:', error);
             alert('Ошибка: ' + error.message);
         }
     }
+
 </script>
 </html>
