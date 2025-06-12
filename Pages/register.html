@@ -4,7 +4,6 @@
     <title>авторизация на главного по суши</title>
     <!-- <link rel="stylesheet" href="/Styles/index.css"> -->
     <link rel="stylesheet" href="../Styles/regstyle.css">
-
     <link rel="stylesheet" href="/Styles/regstyle.css">
 </head>
 <body class="container">
@@ -57,6 +56,7 @@
                     password: data.password
                 };
                 localStorage.setItem('user', JSON.stringify(fUser)); // Раскомментируйте, если нужно сохранить пользователя
+                localStorage.setItem('isLoggedIn', 'true');
                 document.location.href = '../Pages/main.html';
             } else {
                 throw new Error('Данные пользователя не найдены');
