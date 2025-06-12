@@ -292,7 +292,15 @@ window.onload = main;
             return;
         }
         alert(`Добро пожаловать ${user.name}!`);
-        
+        const agree =  confirm(`Хотите выйти?`);
+        if(agree)
+        {
+            localStorage.clear('user');
+            localStorage.setItem('isLoggedIn', 'false');
+            alert(`Вы успешно вышли из аккаунта.`);
+            document.location.href = '../Pages/main.html';
+        }
+
 
     }
 
