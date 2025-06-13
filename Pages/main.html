@@ -149,7 +149,7 @@
         <p class="total-price">Цена: 100 руб.</p>
         <button class="add-to-cart" onclick="addToCart(this)">В корзину</button>
     </div> -->
-    <br>
+<br>
 <footer class="footer">
     <a onclick="document.location.href='https://github.com/DeLucio777/Sushi' ">
         Контакт с нами
@@ -164,28 +164,26 @@
     // let isLoggedIn = true;
     let isLoggedIn;
 
-async function loadSuggestions() {
-    // try {
-    //     const response = await fetch('/api/items', {
-    //         method: 'GET',
-    //     });
-    //     if (!response.ok) {
-    //         throw new Error('Ошибка запроса: ' + response.statusText);
-    //     }
-    //     rolls = await response.json();
-    //     displayItems(rolls);
-    // } catch (error) {
-    //     alert("Ошибка загрузки данных: " + error);
-    // }
+    async function loadSuggestions() {
+        // try {
+        //     // const response = await fetch('/api/items', {
+        //     //     method: 'GET',
+        //     // });
+        //     // if (!response.ok) {
+        //     //     throw new Error('Ошибка запроса: ' + response.statusText);
+        //     // }
+        //     // rolls = await response.json();
+        //  let response = [{"id":1,"image":"image1.jpg","description":"A beautiful item 1","item_name":"Item 1","cost":19.99,"item_type":"1"},{"id":2,"image":"image2.jpg","description":"A useful item 2","item_name":"Item 2","cost":29.99,"item_type":"2"},{"id":3,"image":"image3.jpg","description":"An amazing item 3","item_name":"Item 3","cost":39.99,"item_type":"3"}];
+        //
+        //     // rolls = JSON.stringify(rolls)
+        //     // alert(JSON.stringify(rolls))
+        //     displayItems(rolls);
+        // } catch (error) {
+        //     alert("Ошибка загрузки данных: " + error);
+        // }
    try {
         // Здесь вы используете статический массив, который имитирует ответ от сервера
-        const response = [
-            {"id":1,"image":"image1.jpg","description":"A beautiful item 1","item_name":"Item 1","cost":19.99,"item_type":1},
-            {"id":2,"image":"image2.jpg","description":"A useful item 2","item_name":"Item 2","cost":29.99,"item_type":2},
-            {"id":3,"image":"image3.jpg","description":"An amazing item 3","item_name":"Item 3","cost":39.99,"item_type":3},
-            {"id":4,"image":"image3.jpg","description":"An amazing item 3","item_name":"Item 3","cost":39.99,"item_type":4}
-        ];
-
+        const response = [{"id":1,"image":"image1.jpg","description":"A beautiful item 1","item_name":"Item 1","cost":19.99,"item_type":"1"},{"id":2,"image":"image2.jpg","description":"A useful item 2","item_name":"Item 2","cost":29.99,"item_type":"2"},{"id":3,"image":"image3.jpg","description":"An amazing item 3","item_name":"Item 3","cost":39.99,"item_type":"3"}];
         // Условие проверки response.ok не имеет смысла, так как response - это массив, а не объект ответа
         // Вместо этого просто присваиваем массив rolls
         rolls = response; // Прямое присваивание массива
@@ -194,22 +192,23 @@ async function loadSuggestions() {
     } catch (error) {
         alert("Ошибка загрузки данных: " + error);
     }
-}
+    }
 
 
-function displayItems(items) {
-    // Очистка всех контейнеров перед добавлением новых предметов
-    document.getElementById('Sushi_contain').innerHTML = '';
-    document.getElementById('Rolls_container').innerHTML = '';
-    document.getElementById('Drinks_container').innerHTML = '';
-    document.getElementById('Other_container').innerHTML = '';
+    function displayItems(items) {
+        // Очистка всех контейнеров перед добавлением новых предметов
+        document.getElementById('Sushi_contain').innerHTML = '';
+        document.getElementById('Rolls_container').innerHTML = '';
+        document.getElementById('Drinks_container').innerHTML = '';
+        document.getElementById('Other_container').innerHTML = '';
+        alert(items)
+        // items = JSON.parse(items)
+        items.forEach(item => {
+            const productDiv = document.createElement('div');
+            productDiv.className = 'product';
+            productDiv.setAttribute('data-price', item.cost);
 
-    items.forEach(item => {
-        const productDiv = document.createElement('div');
-        productDiv.className = 'product';
-        productDiv.setAttribute('data-price', item.cost);
-
-        productDiv.innerHTML = `
+            productDiv.innerHTML = `
             <img src="${item.image}" alt="${item.item_name}">
             <h2>${item.item_name}</h2>
             <p>${item.description}</p>
@@ -217,41 +216,43 @@ function displayItems(items) {
             <button class="add-to-cart" onclick="addToCart(this)">В корзину</button>
         `;
 
-        switch (item.item_type) {
-            case 1:
-                document.getElementById('Sushi_contain').appendChild(productDiv);
-                break;
-            case 2:
-                document.getElementById('Rolls_container').appendChild(productDiv);
-                break;
-            case 3:
-                document.getElementById('Drinks_container').appendChild(productDiv);
-                break;
-            case 4:
-                document.getElementById('Other_container').appendChild(productDiv);
-                break;
-            default:
-                console.warn(`Неизвестный тип предмета: ${item.item_type}`);
-        }
-    });
-}
-
-async function loadUsers() {
-    try {
-        const storedUser = localStorage.getItem('user');
-        if (storedUser) {
-        user = JSON.parse(storedUser);
-        }
-    } catch (error) {
-        alert("Ошибка загрузки данных или пользователь не авторизован: " + error);
+            switch (item.item_type) {
+                case 1:
+                    document.getElementById('Sushi_contain').appendChild(productDiv);
+                    break;
+                case 2:
+                    document.getElementById('Rolls_container').appendChild(productDiv);
+                    break;
+                case 3:
+                    document.getElementById('Drinks_container').appendChild(productDiv);
+                    break;
+                case 4:
+                    document.getElementById('Other_container').appendChild(productDiv);
+                    break;
+                default:
+                    console.warn(`Неизвестный тип предмета: ${item.item_type}`);
+            }
+        });
     }
-}
- async function main(){
-    await loadSuggestions();  
-    await loadUsers();  
-    isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
- }
-window.onload = main;
+
+    async function loadUsers() {
+        try {
+            const storedUser = localStorage.getItem('user');
+            if (storedUser) {
+                user = JSON.parse(storedUser);
+            }
+        } catch (error) {
+            alert("Ошибка загрузки данных или пользователь не авторизован: " + error);
+        }
+    }
+
+    async function main() {
+        await loadSuggestions();
+        await loadUsers();
+        isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    }
+
+    window.onload = main;
 
     function addToCart(button) {
         const productDiv = button.closest('.product');
@@ -263,7 +264,6 @@ window.onload = main;
         alert(`${productName} добавлен в корзину. Количество: ${quantity}. Общая цена: ${totalPrice} руб.`);
     }
 
-   
 
     // function addToCart(button) { ///TODO: вай биля тут карочи нада чтоб товары в карзину падали да
     //     const productDiv = button.closest('.product');
@@ -279,6 +279,7 @@ window.onload = main;
     function goToPage(url) {
         document.location.href = url
     }
+
     function goToCart(url) {
         if (!isLoggedIn) {
             alert('Пользователь не авторизован, для сначала авторизуйтесь!');
@@ -286,15 +287,15 @@ window.onload = main;
         }
         document.location.href = url
     }
+
     function goToUser(url) {
         if (!isLoggedIn) {
             document.location.href = url
             return;
         }
         alert(`Добро пожаловать ${JSON.stringify(user)}!`);
-        const agree =  confirm(`Хотите выйти?`);
-        if(agree)
-        {
+        const agree = confirm(`Хотите выйти?`);
+        if (agree) {
             localStorage.clear('user');
             localStorage.setItem('isLoggedIn', 'false');
             alert(`Вы успешно вышли из аккаунта.`);
