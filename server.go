@@ -55,11 +55,63 @@ func userToItemsHandel(w http.ResponseWriter, r *http.Request) {
 	case http.MethodGet:
 		getItemsToUsersHandel(w, r)
 	case http.MethodPost:
+		addItemToUserHandel(w, r)
 	case http.MethodDelete:
-
+		fmt.Println("s")
+		deleteItemFromUserHandel(w, r)
 	default:
 		http.Error(w, "Метод не поддерживается", http.StatusMethodNotAllowed)
 	}
+}
+
+func addItemToUserHandel(w http.ResponseWriter, r *http.Request) {
+	userId := r.URL.Query().Get("user_id")
+	itemId := r.URL.Query().Get("item_id")
+
+	if userId == "" || itemId == "" {
+		http.Error(w, "user_id и item_id обязательны", http.StatusBadRequest)
+		return
+	}
+
+	db, err := connectDB()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	defer db.Close()
+
+	_, err = db.Exec("INSERT INTO tbl_users_to_items (user_id, item_id) VALUES ($1, $2)", userId, itemId)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusCreated)
+}
+
+func deleteItemFromUserHandel(w http.ResponseWriter, r *http.Request) {
+	userId := r.URL.Query().Get("user_id")
+	itemId := r.URL.Query().Get("item_id")
+	fmt.Println("do")
+
+	if userId == "" || itemId == "" {
+		http.Error(w, "user_id и item_id обязательны", http.StatusBadRequest)
+		return
+	}
+
+	db, err := connectDB()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	defer db.Close()
+
+	_, err = db.Exec("DELETE FROM tbl_users_to_items WHERE user_id = $1 AND item_id = $2", userId, itemId)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	w.WriteHeader(http.StatusNoContent)
 }
 
 func getItemsHandel(w http.ResponseWriter, r *http.Request) {
@@ -160,12 +212,21 @@ func getItemsToUsersHandel(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		var items []Item
-		itemsRows, err := db.Query("SELECT id, user_id, item_id FROM tbl_users_to_items")
+		itemsRows, err := db.Query("SELECT ID, image, description, item_name, cost, item_type FROM tbl_item where ID = $1", itemId)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		defer rows.Close()
+		for itemsRows.Next() {
+			var item Item
+			err := itemsRows.Scan(&item.ID, &item.Image, &item.Description, &item.Name, &item.Cost, &item.ItemType)
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+			items = append(items, item)
+		}
+		userToItem.Items = items
 		usersToItems = append(usersToItems, userToItem)
 	}
 
@@ -204,6 +265,7 @@ func handleRequest() {
 	http.HandleFunc("/api/items", itemsHandel)
 	http.HandleFunc("/api/users", userHandel)
 	http.HandleFunc("/api/items_to_users", userToItemsHandel)
+	http.HandleFunc("/api/items_to_users_delete", deleteItemFromUserHandel)
 	err := http.ListenAndServe(":8080", nil)
 	if err != nil {
 		fmt.Println("connect error")
