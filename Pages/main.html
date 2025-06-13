@@ -161,7 +161,7 @@
 <script>
     let rolls = [];
     let user = [];
-    // let isLoggedIn = true;
+    let userId;
     let isLoggedIn;
 
 async function loadSuggestions() {
@@ -204,11 +204,11 @@ function displayItems(items) {
     document.getElementById('Rolls_container').innerHTML = '';
     document.getElementById('Drinks_container').innerHTML = '';
     document.getElementById('Other_container').innerHTML = '';
-    alert(items)
     items = JSON.parse(items)
     items.forEach(item => {
         const productDiv = document.createElement('div');
         productDiv.className = 'product';
+        productDiv.setAttribute('data-id', item.id);
         productDiv.setAttribute('data-price', item.cost);
 
         productDiv.innerHTML = `
@@ -241,9 +241,14 @@ function displayItems(items) {
 
 async function loadUsers() {
     try {
-        const storedUser = localStorage.getItem('user');
-        if (storedUser) {
+         isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+         if(!isLoggedIn){
+            return
+         }
+        let storedUser = localStorage.getItem('user');
+        if (storedUser != -1) {
         user = JSON.parse(storedUser);
+        userId = JSON.stringify(user.id)
         }
     } catch (error) {
         alert("Ошибка загрузки данных или пользователь не авторизован: " + error);
@@ -252,18 +257,14 @@ async function loadUsers() {
  async function main(){
     await loadSuggestions();  
     await loadUsers();  
-    isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    // isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
  }
 window.onload = main;
 
     function addToCart(button) {
         const productDiv = button.closest('.product');
-        const productName = productDiv.querySelector('h2').innerText;
-        const quantity = productDiv.querySelector('.quantity').value;
-        const pricePerUnit = parseFloat(productDiv.getAttribute('data-price'));
-        const totalPrice = pricePerUnit * quantity;
-
-        alert(`${productName} добавлен в корзину. Количество: ${quantity}. Общая цена: ${totalPrice} руб.`);
+        const itemId = productDiv.getAttribute('data-id');
+        
     }
 
    
@@ -289,12 +290,13 @@ window.onload = main;
         }
         document.location.href = url
     }
+
     function goToUser(url) {
         if (!isLoggedIn) {
             document.location.href = url
             return;
         }
-        alert(`Добро пожаловать ${JSON.stringify(user)}!`);
+        alert(`Добро пожаловать ${JSON.stringify(user.name)}!`);
         const agree =  confirm(`Хотите выйти?`);
         if(agree)
         {

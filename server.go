@@ -155,9 +155,14 @@ func getUserHandel(w http.ResponseWriter, r *http.Request) {
 	var id int
 	err = db.QueryRow("SELECT ID FROM tbl_users WHERE name = $1 AND password = $2", name, password).Scan(&id)
 	exists := id != 0
+	if exists {
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(map[string]int{"id": id})
+	} else {
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(map[string]int{"id": -1})
+	}
 
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(map[string]bool{"exists": exists})
 }
 
 func setUserHandel(w http.ResponseWriter, r *http.Request) {

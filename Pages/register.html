@@ -47,12 +47,13 @@
             let data = await response.json();
             // alert(JSON.stringify(data))
             // Проверка наличия данных
-            if (data.exists) {
+            if (data.id!=-1) {
                 let fUser = {
-                    name: data.name,
-                    password: data.password
+                    id: data.id,
+                    name: uName,
+                    password: uPassword
                 };
-                localStorage.setItem('user', JSON.stringify(uName)); // Раскомментируйте, если нужно сохранить пользователя
+                localStorage.setItem('user', JSON.stringify(fUser)); // Раскомментируйте, если нужно сохранить пользователя
                 localStorage.setItem('isLoggedIn', 'true');
                 // alert(localStorage.getItem('user'))
                 document.location.href = '../Pages/main.html';
