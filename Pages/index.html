@@ -53,8 +53,8 @@
             <div class="profile-icon"></div>
         </div>
 
-        <div class="cart-items">
-            <div class="cart-item">
+        <div class="cart-items" id ="cart-items">
+            <!-- <div class="cart-item">
                 <img src="path/to/product-image.jpg" alt="Продукт">
                 <div>
                     <h2>Название продукта</h2>
@@ -80,7 +80,7 @@
                     </div>
                 </div>
                 <button class="remove-item">Удалить</button>
-            </div>
+            </div> -->
         </div>
         <div class="total-price">Итого: 2500 руб.</div>
         <button class="checkout-button" onclick="openOrderModal()">Оформить заказ</button>
@@ -121,21 +121,103 @@
 </footer>
 
 <script>
+    let items = [];
+    let userId;
+    async function loadUsers() {
+    try {
+        let storedUser = localStorage.getItem('user');
+        if (storedUser != -1) {
+        let user = JSON.parse(storedUser);
+        userId = JSON.stringify(user.id)
+        }
+    } catch (error) {
+        alert("Ошибка загрузки данных или пользователь не авторизован: " + error);
+    }
+}
+ async function main(){
+    await loadUsers();
+    await updateCartDisplay();  
+    // alert(userId)
+    
+ }
+window.onload = main;
+
+
+async function updateCartDisplay() {
+    const cartItemsContainer = document.getElementById('cart-items');
+    cartItemsContainer.innerHTML = ''; 
+    const response = fetch('/api/items_to_users?user_id = ${userId}',{
+        method: 'GET'
+    });
+    alert('1')
+    const data  = response.json();
+    alert(data)
+    data = JSON.stringify(data);
+    alert(data);
+
+//     .then(items => {
+//         items.forEach(item => {
+//             const cartItemDiv = document.createElement('div');
+//             cartItemDiv.className = 'cart-item';
+//             cartItemDiv.innerHTML = `
+//                 <img src="${item.image}" alt="${item.item_name}">
+//                 <div>
+//                     <h2>${item.item_name}</h2>
+//                     <p>Цена: ${item.cost} руб.</p>
+//                     <div class="quantity-controls">
+//                         <button onclick="updateQuantity(${item.id}, -1)">-</button>
+//                         <input type="number" id="quantity-${item.id}" value="${item.quantity}" min="1" style="width: 40px; text-align: center;">
+//                         <button onclick="updateQuantity(${item.id}, 1)">+</button>
+//                     </div>
+//                 </div>
+//                 <button class="remove-item" onclick="removeFromCart(${item.id})">Удалить</button>
+//             `;
+//             cartItemsContainer.appendChild(cartItemDiv);
+//         });
+//     })
+//     .catch(error => {
+//         console.error('Ошибка при получении товаров из корзины:', error);
+//     });
+// }
+
+// // Пример функции для обновления количества товара
+// function updateQuantity(itemId, change) {
+//     const quantityInput = document.getElementById(`quantity-${itemId}`);
+//     let currentQuantity = parseInt(quantityInput.value);
+//     currentQuantity += change;
+
+//     if (currentQuantity < 1) {
+//         currentQuantity = 1; // Минимальное количество 1
+//     }
+
+//     quantityInput.value = currentQuantity;
+
+    // Здесь можно добавить логику для обновления количества на сервере
+}
+
+// Пример функции для удаления товара из корзины
+function removeFromCart(itemId) {
+    fetch('/remove-from-cart', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ item_id: itemId })
+    })
+    .then(response => {
+        if (response.ok) {
+            updateCartDisplay(); // Обновляем отображение корзины
+        }
+    })
+    .catch(error => {
+        console.error('Ошибка при удалении товара из корзины:', error);
+    });
+}
+
+
+
     function goToPage(url){
             document.location.href = url
-        }
-        function updateQuantity(itemId, change) {
-            const quantityInput = document.getElementById(`quantity-${itemId}`);
-            let currentQuantity = parseInt(quantityInput.value);
-            currentQuantity += change;
-
-            if (currentQuantity < 1) {
-                currentQuantity = 1; // Минимальное количество 1
-            }
-
-            quantityInput.value = currentQuantity;
-
-            // Здесь можно добавить логику для обновления общей стоимости
         }
         function openOrderModal() {
     document.getElementById('orderModal').style.display = 'block';

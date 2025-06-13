@@ -262,9 +262,22 @@ async function loadUsers() {
 window.onload = main;
 
     function addToCart(button) {
+        // alert('122')
+         if (!isLoggedIn) {
+            alert('Пользователь не авторизован, для сначала авторизуйтесь!');
+            return;
+        }
+        try{
         const productDiv = button.closest('.product');
         const itemId = productDiv.getAttribute('data-id');
-        
+        const response = fetch('/api/items_to_users?user_id = ${userId}&item = ${itemId}',{
+            method: 'POST'
+        });
+        alert('Товар добавлен успешно')
+    }catch(error){
+        console.error('Ошибка:', error);
+        alert('Ошибка: ' + error.message);
+    }
     }
 
    
