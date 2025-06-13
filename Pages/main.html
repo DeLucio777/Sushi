@@ -18,22 +18,22 @@
 
     </div>
     <div>
-        <button class="cart-icon" onclick="goToPage('../Pages/index.html')"></button>
+        <button class="cart-icon" onclick="goToCart('../Pages/index.html')"></button>
         <!--TODO:Вай вася тут хуйня полная, нада чтоб корзинка эбучая открывалась толька при зареганом чушпане да-->
-        <button class="profile-icon" onclick="goToPage('../Pages/register.html')"></button>
+        <button class="profile-icon" onclick="goToUser('../Pages/register.html')"></button>
     </div>
 </header>
 <br>
 <br>
 <br>
 <br>
-<button style="width: 100%; height: 20%; background: white"
+<button style="width: 100%; height: 20%; background: white; cursor: pointer;"
         onclick="document.location.href='https://github.com/DeLucio777/Sushi' ">Тут могла быть ваша реклама
 </button>
 <br>
-<h2 id="sushi">Sushi</h2>
-<div class="contain">
-    <div class="product" data-price="350">
+<h2 id="sushi">Суши</h2>
+<div class="contain" id="Sushi_contain">
+    <!-- <div class="product" data-price="350">
         <img src="../Styles/img/photo0jpg.jpg" alt="Суши с терияки">
         <h2>Суши с терияки</h2>
         <p>Суши из форели, водорослей, сливочного соуса, огурцов и соуса терияки</p>
@@ -92,12 +92,12 @@
         </div>
         <p class="total-price">Цена: 200 руб.</p>
         <button class="add-to-cart" onclick="addToCart(this)">В корзину</button>
-    </div>
+    </div> -->
 </div>
 
 <h2 id="rolls">Роллы</h2>
-<div class="contain">
-    <div class="product" data-price="350">
+<div class="contain" id="Rolls_container">
+    <!-- <div class="product" data-price="350">
         <img src="../Styles/img/roll1.jpg" alt="Ролл Калифорния">
         <h2>Ролл Калифорния</h2>
         <p>Ролл с крабом, авокадо и огурцом</p>
@@ -107,13 +107,13 @@
         </div>
         <p class="total-price">Цена: 350 руб.</p>
         <button class="add-to-cart" onclick="addToCart(this)">В корзину</button>
-    </div>
+    </div> -->
     <!-- Добавьте больше товаров здесь -->
 </div>
 
 <h2 id="drinks">Напитки</h2>
-<div class="contain">
-    <div class="product" data-price="150">
+<div class="contain" id="Drinks_container">
+    <!-- <div class="product" data-price="150">
         <img src="../Styles/img/drink1.jpg" alt="Зеленый чай">
         <h2>Зеленый чай</h2>
         <p>Освежающий зеленый чай, 0,5 л</p>
@@ -132,12 +132,12 @@
         </div>
         <p class="total-price">Цена: 200 руб.</p>
         <button class="add-to-cart" onclick="addToCart(this)">В корзину</button>
-    </div>
+    </div> -->
 </div>
 
 
 <h2 id="other">Другое</h2><!--TODO: Карч вася сделай мине так чтоб вах прадукт брал ценник с эбучий json-->
-<div class="contain" id="product-container"></div>
+<div class="contain" id="Other_container"></div>
 <!-- <div class="contain" id="product-container">
     <div class="product" data-price="100">
         <img src="../Styles/img/other1.jpg" alt="Соевый соус">
@@ -149,6 +149,7 @@
         <p class="total-price">Цена: 100 руб.</p>
         <button class="add-to-cart" onclick="addToCart(this)">В корзину</button>
     </div> -->
+    <br>
 <footer class="footer">
     <a onclick="document.location.href='https://github.com/DeLucio777/Sushi' ">
         Контакт с нами
@@ -159,60 +160,98 @@
 </body>
 <script>
     let rolls = [];
-    let user;
-    async function loadSuggestions() {
-        try {
-            const response = await fetch('/api/items', {
-                method: 'GET',
-            });
-            if (!response.ok) {
-                throw new Error('Ошибка запроса: ' + response.statusText);
-            }
+    let user = [];
+    // let isLoggedIn = true;
+    let isLoggedIn;
 
-            rolls = await response.json()
-            alert(JSON.stringify(rolls))
+async function loadSuggestions() {
+    // try {
+    //     const response = await fetch('/api/items', {
+    //         method: 'GET',
+    //     });
+    //     if (!response.ok) {
+    //         throw new Error('Ошибка запроса: ' + response.statusText);
+    //     }
+    //     rolls = await response.json();
+    //     displayItems(rolls);
+    // } catch (error) {
+    //     alert("Ошибка загрузки данных: " + error);
+    // }
+   try {
+        // Здесь вы используете статический массив, который имитирует ответ от сервера
+        const response = [
+            {"id":1,"image":"image1.jpg","description":"A beautiful item 1","item_name":"Item 1","cost":19.99,"item_type":1},
+            {"id":2,"image":"image2.jpg","description":"A useful item 2","item_name":"Item 2","cost":29.99,"item_type":2},
+            {"id":3,"image":"image3.jpg","description":"An amazing item 3","item_name":"Item 3","cost":39.99,"item_type":3},
+            {"id":4,"image":"image3.jpg","description":"An amazing item 3","item_name":"Item 3","cost":39.99,"item_type":4}
+        ];
 
-        } catch (error) {
-            alert("Ошибка загрузки данных:", error);
+        // Условие проверки response.ok не имеет смысла, так как response - это массив, а не объект ответа
+        // Вместо этого просто присваиваем массив rolls
+        rolls = response; // Прямое присваивание массива
+
+        displayItems(rolls); // Вызов функции для отображения предметов
+    } catch (error) {
+        alert("Ошибка загрузки данных: " + error);
+    }
+}
+
+
+function displayItems(items) {
+    // Очистка всех контейнеров перед добавлением новых предметов
+    document.getElementById('Sushi_contain').innerHTML = '';
+    document.getElementById('Rolls_container').innerHTML = '';
+    document.getElementById('Drinks_container').innerHTML = '';
+    document.getElementById('Other_container').innerHTML = '';
+
+    items.forEach(item => {
+        const productDiv = document.createElement('div');
+        productDiv.className = 'product';
+        productDiv.setAttribute('data-price', item.cost);
+
+        productDiv.innerHTML = `
+            <img src="${item.image}" alt="${item.item_name}">
+            <h2>${item.item_name}</h2>
+            <p>${item.description}</p>
+            <p class="total-price">Цена: ${item.cost} руб.</p>
+            <button class="add-to-cart" onclick="addToCart(this)">В корзину</button>
+        `;
+
+        switch (item.item_type) {
+            case 1:
+                document.getElementById('Sushi_contain').appendChild(productDiv);
+                break;
+            case 2:
+                document.getElementById('Rolls_container').appendChild(productDiv);
+                break;
+            case 3:
+                document.getElementById('Drinks_container').appendChild(productDiv);
+                break;
+            case 4:
+                document.getElementById('Other_container').appendChild(productDiv);
+                break;
+            default:
+                console.warn(`Неизвестный тип предмета: ${item.item_type}`);
         }
+    });
+}
+
+async function loadUsers() {
+    try {
+        const storedUser = localStorage.getItem('user');
+        if (storedUser) {
+        user = JSON.parse(storedUser);
+        }
+    } catch (error) {
+        alert("Ошибка загрузки данных или пользователь не авторизован: " + error);
     }
-
-    function main() {
-        loadSuggestions();
-        renderProducts();
-
-    }
-
-    function renderProducts() {
-        const container = document.getElementById('product-container');
-
-
-        rolls.forEach(product => {
-            const productDiv = document.createElement('div');
-            productDiv.classList.add('product');
-            productDiv.setAttribute('data-price', product.cost);
-
-            productDiv.innerHTML = `
-                <img src="${product.image}" alt="${product.item_name}">
-                <h2>${product.item_name}</h2>
-                <p>${product.description}</p>
-                <div class="input-group quantity_goods" style="margin: 5px 0;">
-                    <input type="number" class="quantity" step="1" min="1" value="1" onchange="updatePrice(this)">
-                </div>
-                <p class="total-price">Цена: ${product.cost} руб.</p>
-                <button class="add-to-cart" onclick="addToCart(this)">В корзину</button>
-            `;
-            container.appendChild(productDiv);
-        });
-    }
-
-    function updatePrice(input) {
-        const productDiv = input.closest('.product');
-        const pricePerUnit = parseFloat(productDiv.getAttribute('data-price'));
-        const quantity = parseInt(input.value);
-        const totalPrice = pricePerUnit * quantity;
-        productDiv.querySelector('.total-price').innerText = `Цена: ${totalPrice} руб.`;
-    }
+}
+ async function main(){
+    await loadSuggestions();  
+    await loadUsers();  
+    isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+ }
+window.onload = main;
 
     function addToCart(button) {
         const productDiv = button.closest('.product');
@@ -224,15 +263,7 @@
         alert(`${productName} добавлен в корзину. Количество: ${quantity}. Общая цена: ${totalPrice} руб.`);
     }
 
-    /////////////////////////////////////
-
-    //     function updatePrice(input) { ///а тут вася чтоб нормальна цениик обновлялся биля
-    //     const productDiv = input.closest('.product');
-    //     const pricePerUnit = parseFloat(productDiv.getAttribute('data-price'));
-    //     const quantity = parseInt(input.value);
-    //     const totalPrice = pricePerUnit * quantity;
-    //     productDiv.querySelector('.total-price').innerText = `Цена: ${totalPrice} руб.`;
-    // }
+   
 
     // function addToCart(button) { ///TODO: вай биля тут карочи нада чтоб товары в карзину падали да
     //     const productDiv = button.closest('.product');
@@ -241,15 +272,37 @@
     //     const pricePerUnit = parseFloat(productDiv.getAttribute('data-price'));
     //     const totalPrice = pricePerUnit * quantity;
 
-    //     alert(`${productName} добавлен в корзину. Количество: ${quantity}. Общая цена: ${totalPrice} руб.`);
+    //     alert(`${productName} добавлен в корзину. Количество: ${quantity}. `);
     // }
 
 
     function goToPage(url) {
         document.location.href = url
     }
+    function goToCart(url) {
+        if (!isLoggedIn) {
+            alert('Пользователь не авторизован, для сначала авторизуйтесь!');
+            return;
+        }
+        document.location.href = url
+    }
+    function goToUser(url) {
+        if (!isLoggedIn) {
+            document.location.href = url
+            return;
+        }
+        alert(`Добро пожаловать ${user.name}!`);
+        const agree =  confirm(`Хотите выйти?`);
+        if(agree)
+        {
+            localStorage.clear('user');
+            localStorage.setItem('isLoggedIn', 'false');
+            alert(`Вы успешно вышли из аккаунта.`);
+            document.location.href = '../Pages/main.html';
+        }
 
-    document.addEventListener('DOMContentLoaded', main)
+
+    }
 
 </script>
 </html>
