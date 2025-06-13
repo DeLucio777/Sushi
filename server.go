@@ -170,6 +170,8 @@ func setUserHandel(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 	name := r.URL.Query().Get("name")
 	password := r.URL.Query().Get("password")
+
+	fmt.Println(name + " " + password)
 	var id int
 	err = db.QueryRow("SELECT ID FROM tbl_users WHERE name = $1 AND password = $2", name, password).Scan(&id)
 	exists := id != 0

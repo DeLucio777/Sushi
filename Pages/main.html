@@ -291,7 +291,7 @@ window.onload = main;
             document.location.href = url
             return;
         }
-        alert(`Добро пожаловать ${user.name}!`);
+        alert(`Добро пожаловать ${JSON.stringify(user)}!`);
         const agree =  confirm(`Хотите выйти?`);
         if(agree)
         {

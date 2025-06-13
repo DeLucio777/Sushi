@@ -36,27 +36,35 @@
 </body>
 <script>
     async function setData(uName, uPassword, sp) {
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; 
         if (sp != uPassword){
             alert('пароли не совпадают')
             return
         }
+         if(!emailPattern.test(uName)){
+                alert('Корректно введите адрес эл. почты!');
+                return
+            }
         try {
-            alert('/api/user_by_params?user_name=' + encodeURIComponent(uName) + '&user_password=' + encodeURIComponent(uPassword))
+            // alert('/api/users?name=' + encodeURIComponent(uName) + '&password=' + encodeURIComponent(uPassword))
             let str =JSON.stringify({ user_name: uName, user_password: uPassword })
-            const response = await fetch('/api/users?user_name=' + encodeURIComponent(uName) + '&user_password=' + encodeURIComponent(uPassword), {
+            const response = await fetch('/api/users?name=' + encodeURIComponent(uName) + '&password=' + encodeURIComponent(uPassword), {
                 method: 'POST',
 
             });
             if (!response.ok) {
-                alert('Ошибка запроса: ' + response.statusText);
+                alert('пользователь уже существует');
                 return
             }
-            const data = await response.json();
-            alert(JSON.stringify(data))
+            else{
+                document.location.href = '../Pages/register.html';
+            }
+           
+            
          
         } catch (error) {
             console.error('Ошибка:', error);
-            alert('Ошибка1: ' + error.message);
+            alert('Пользователь уже существует');
         }
     }
 </script>

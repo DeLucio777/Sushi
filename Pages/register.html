@@ -10,14 +10,14 @@
 <div class="form">
     <p class="form-title">Войдите в свой аккаунт</p>
     <div class="input-container">
-        <input type="Эл. почта" placeholder="Введите эл. почту" id="uName" name="uname" value="name1">
+        <input type="Эл. почта" placeholder="Введите эл. почту" id="uName" name="uname" >
         <span>
        </span>
     </div>
     <div class="input-container">
-        <input type="password" placeholder="Введите пароль" name="password" value="password1" id="pas">
+        <input type="password" placeholder="Введите пароль" name="password"  id="pas">
     </div>
-    <button type="submit" class="submit" onclick="test()">
+    <button type="submit" class="submit" onclick="checkData()">
         Войти
     </button>
 
@@ -31,35 +31,33 @@
 </div>
 </body>
 <script>
-    function test(){
-        let uName=document.getElementById('uName').value
-        let uPassword=document.getElementById('pas').value
-        alert(uName+' '+uPassword)
-    }
+
     async function checkData() {
 
- 
+        let uName = document.getElementById('uName').value
+        let uPassword = document.getElementById('pas').value
         try {
-
-            const response = await fetch('/api/users?user_name=' + encodeURIComponent(uName) + '&user_password=' + encodeURIComponent(uPassword), {
+            // alert('/api/users?name=' + encodeURIComponent(uName) + '&password=' + encodeURIComponent(uPassword))
+            const response = await fetch('/api/users?name=' + encodeURIComponent(uName) + '&password=' + encodeURIComponent(uPassword), {
                 method: 'GET',
             });
             if (!response.ok) {
                 throw new Error('Ошибка запроса: ' + response.statusText);
             }
-            const data = await response.json();
-
+            let data = await response.json();
+            // alert(JSON.stringify(data))
             // Проверка наличия данных
-            if (data && data.name && data.password) {
+            if (data.exists) {
                 let fUser = {
                     name: data.name,
                     password: data.password
                 };
-                localStorage.setItem('user', JSON.stringify(fUser)); // Раскомментируйте, если нужно сохранить пользователя
+                localStorage.setItem('user', JSON.stringify(uName)); // Раскомментируйте, если нужно сохранить пользователя
                 localStorage.setItem('isLoggedIn', 'true');
+                // alert(localStorage.getItem('user'))
                 document.location.href = '../Pages/main.html';
             } else {
-                throw new Error('Данные пользователя не найдены');
+                alert('Данные пользователя не найдены');
             }
         } catch (error) {
             console.error('Ошибка:', error);
