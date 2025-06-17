@@ -67,7 +67,7 @@ func userToItemsHandel(w http.ResponseWriter, r *http.Request) {
 func addItemToUserHandel(w http.ResponseWriter, r *http.Request) {
 	userId := r.URL.Query().Get("user_id")
 	itemId := r.URL.Query().Get("item_id")
-
+	fmt.Println(userId, itemId)
 	if userId == "" || itemId == "" {
 		http.Error(w, "user_id и item_id обязательны", http.StatusBadRequest)
 		return
@@ -82,6 +82,7 @@ func addItemToUserHandel(w http.ResponseWriter, r *http.Request) {
 
 	_, err = db.Exec("INSERT INTO tbl_users_to_items (user_id, item_id) VALUES ($1, $2)", userId, itemId)
 	if err != nil {
+		fmt.Println(err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}

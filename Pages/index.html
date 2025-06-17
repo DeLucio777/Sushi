@@ -82,9 +82,13 @@
                 <button class="remove-item">Удалить</button>
             </div> -->
         </div>
-        <div class="total-price">Итого: 2500 руб.</div>
+        <div class="total-price" id ="total-price">Итого: </div>
         <button class="checkout-button" onclick="openOrderModal()">Оформить заказ</button>
         <button class="checkout-button" onclick="goToPage('../Pages/main.html')">Продолжить покупки</button>
+    <br>
+    <br>
+    <br>
+    <br>
 
 <div id="orderModal" class="modal" style="display:none;">
     <div class="modal-content">
@@ -143,76 +147,109 @@
 window.onload = main;
 
 
-async function updateCartDisplay() {
-    const cartItemsContainer = document.getElementById('cart-items');
-    cartItemsContainer.innerHTML = ''; 
-    const response = fetch('/api/items_to_users?user_id = ${userId}',{
-        method: 'GET'
-    });
-    alert('1')
-    const data  = response.json();
-    alert(data)
-    data = JSON.stringify(data);
-    alert(data);
+    async function updateCartDisplay() {
+        const cartItemsContainer = document.getElementById('cart-items');
+        const storedUser = JSON.parse(localStorage.getItem('user'));
+        const totalPriceContainer = document.getElementById('total-price');
 
-//     .then(items => {
-//         items.forEach(item => {
-//             const cartItemDiv = document.createElement('div');
-//             cartItemDiv.className = 'cart-item';
-//             cartItemDiv.innerHTML = `
-//                 <img src="${item.image}" alt="${item.item_name}">
-//                 <div>
-//                     <h2>${item.item_name}</h2>
-//                     <p>Цена: ${item.cost} руб.</p>
-//                     <div class="quantity-controls">
-//                         <button onclick="updateQuantity(${item.id}, -1)">-</button>
-//                         <input type="number" id="quantity-${item.id}" value="${item.quantity}" min="1" style="width: 40px; text-align: center;">
-//                         <button onclick="updateQuantity(${item.id}, 1)">+</button>
-//                     </div>
-//                 </div>
-//                 <button class="remove-item" onclick="removeFromCart(${item.id})">Удалить</button>
-//             `;
-//             cartItemsContainer.appendChild(cartItemDiv);
-//         });
-//     })
-//     .catch(error => {
-//         console.error('Ошибка при получении товаров из корзины:', error);
-//     });
-// }
+        try {
+            cartItemsContainer.innerHTML = '';
+            totalPriceContainer.innerHTML = 'Итого: 0 руб.';
+            const response = await fetch('/api/items_to_users', {
+                method: 'GET'
+            });
 
-// // Пример функции для обновления количества товара
-// function updateQuantity(itemId, change) {
-//     const quantityInput = document.getElementById(`quantity-${itemId}`);
-//     let currentQuantity = parseInt(quantityInput.value);
-//     currentQuantity += change;
+            if (!response.ok) {
+                throw new Error(`Ошибка: ${response.status}`);
+            }
 
-//     if (currentQuantity < 1) {
-//         currentQuantity = 1; // Минимальное количество 1
-//     }
+            let data = await response.json(); // Получаем данные из API
+            const cartItems = {}; // Объект для хранения предметов в корзине
 
-//     quantityInput.value = currentQuantity;
+            // Перебираем данные и выводим предметы для текущего пользователя
+            data.forEach(userCart => {
+                if (userCart.user_id == storedUser.id) { // Проверяем, совпадает ли user_id с текущим пользователем
+                    userCart.items.forEach(item => {
+                        // Проверяем, существует ли предмет в корзине
+                        if (cartItems[item.id]) {
+                            // Если предмет уже существует, увеличиваем его количество
+                            cartItems[item.id].quantity += 1;
+                        } else {
+                            // Если предмет не существует, добавляем его в корзину
+                            cartItems[item.id] = {
+                                ...item,
+                                quantity: 1 // Начальное количество
+                            };
+                        }
+                    });
+                }
+            });
 
-    // Здесь можно добавить логику для обновления количества на сервере
-}
+            // Теперь выводим предметы в корзину
+            let totalPrice = 0; // Переменная для хранения общей стоимости
+            for (const itemId in cartItems) {
+                const item = cartItems[itemId];
+                const cartItem = document.createElement('div');
+                cartItem.classList.add('cart-item');
+                cartItem.innerHTML = `
+                <img src="${item.image}" alt="${item.description}">
+                <div>
+                    <h2>${item.item_name}</h2>
+                    <p>Цена: ${item.cost} руб.</p>
+                    <p>Количество: <span id="quantity-${item.id}">${item.quantity}</span></p>
+                    <div class="quantity-controls">
+                        <button onclick="updateQuantityMinus(${item.id}, -1)">-</button>
+                        <input type="number" id="quantity-input-${item.id}" value="${item.quantity}" min="1" style="width: 40px; text-align: center;" onchange="updateQuantity(${item.id}, this.value - ${item.quantity})">
+                        <button onclick="updateQuantityPlus(${item.id}, 1)">+</button>
+                    </div>
+                </div>
+                <button class="remove-item" onclick="removeItem(${item.id})">Удалить</button>
+            `;
 
-// Пример функции для удаления товара из корзины
-function removeFromCart(itemId) {
-    fetch('/remove-from-cart', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ item_id: itemId })
-    })
-    .then(response => {
-        if (response.ok) {
-            updateCartDisplay(); // Обновляем отображение корзины
+                cartItemsContainer.appendChild(cartItem); // Добавляем элемент в контейнер корзины
+                totalPrice += item.cost * item.quantity;
+            }
+            totalPriceContainer.innerHTML = `Итого: ${totalPrice.toFixed(2)} руб.`;
+        } catch (ex) {
+            alert(ex);
         }
-    })
-    .catch(error => {
-        console.error('Ошибка при удалении товара из корзины:', error);
-    });
-}
+    }
+
+    // Пример функции для обновления количества предметов
+    function updateQuantityMinus(itemId, change) {
+        const quantityInput = document.getElementById(`quantity-input-${itemId}`);
+        let currentQuantity = parseInt(quantityInput.value);
+        currentQuantity += change;
+        if (currentQuantity < 1) {
+            currentQuantity = 1;
+            return;
+        }
+
+        ///доделать
+        quantityInput.value = currentQuantity;
+        document.getElementById(`quantity-${itemId}`).innerText = currentQuantity;
+    }
+
+    function updateQuantityPlus(itemId, change) {
+        const quantityInput = document.getElementById(`quantity-input-${itemId}`);
+        let currentQuantity = parseInt(quantityInput.value);
+        currentQuantity += change;
+        ///доделать
+        quantityInput.value = currentQuantity;
+        document.getElementById(`quantity-${itemId}`).innerText = currentQuantity;
+    }
+
+
+
+    // Пример функции для удаления предмета из корзины
+    async function removeItem(itemId) {
+        alert(`/api/items_to_users_delete?user_id=${userId}&item_id=${itemId}`)
+
+        const response = await fetch(`/api/items_to_users_delete?user_id=${userId}&item_id=${itemId}`);
+        updateCartDisplay();
+
+    }
+
 
 
 
