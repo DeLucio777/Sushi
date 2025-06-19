@@ -107,7 +107,48 @@ func deleteItemFromUserHandel(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
-	_, err = db.Exec("DELETE FROM tbl_users_to_items WHERE user_id = $1 AND item_id = $2", userId, itemId)
+	_, err = db.Exec(`
+    DELETE FROM tbl_users_to_items 
+    WHERE ctid IN (
+        SELECT ctid 
+        FROM tbl_users_to_items 
+        WHERE user_id = $1 AND item_id = $2 
+        LIMIT 1
+    )
+`, userId, itemId)
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	w.WriteHeader(http.StatusNoContent)
+}
+
+func deleteAllItemFromUserHandel(w http.ResponseWriter, r *http.Request) {
+	userId := r.URL.Query().Get("user_id")
+	fmt.Println("do")
+
+	if userId == "" {
+		http.Error(w, "user_id обязательны", http.StatusBadRequest)
+		return
+	}
+
+	db, err := connectDB()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	defer db.Close()
+
+	_, err = db.Exec(`
+    DELETE FROM tbl_users_to_items 
+    WHERE ctid IN (
+        SELECT ctid 
+        FROM tbl_users_to_items 
+        WHERE user_id = $1
+    )
+`, userId)
+
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -274,6 +315,7 @@ func handleRequest() {
 	http.HandleFunc("/api/users", userHandel)
 	http.HandleFunc("/api/items_to_users", userToItemsHandel)
 	http.HandleFunc("/api/items_to_users_delete", deleteItemFromUserHandel)
+	http.HandleFunc("/api/items_to_users_delete_all", deleteAllItemFromUserHandel)
 	err := http.ListenAndServe(":8080", nil)
 	if err != nil {
 		fmt.Println("connect error")

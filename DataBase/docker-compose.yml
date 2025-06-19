@@ -8,8 +8,8 @@ services:
       POSTGRES_DB: postgres
     volumes:
       - ./data:/var/lib/postgresql/data
-      - ./schema.sql:/schema.sql
-      - ./seeds.sql:/seeds.sql
+#      - ./schema.sql:/schema.sql
+#      - ./seeds.sql:/seeds.sql
     ports:
       - "5432:5432"
     networks:

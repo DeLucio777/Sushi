@@ -66,21 +66,8 @@
                     </div>
                 </div>
                 <button class="remove-item">Удалить</button>
-            </div>
+            </div>-->
 
-            <div class="cart-item">
-                <img src="path/to/product-image.jpg" alt="Продукт">
-                <div>
-                    <h2>Название продукта</h2>
-                    <p>Цена: 1500 руб.</p>
-                    <div class="quantity-controls">
-                        <button onclick="updateQuantity(1, -1)">-</button>
-                        <input type="number" id="quantity-1" value="1" min="1" style="width: 40px; text-align: center;">
-                        <button onclick="updateQuantity(1, 1)">+</button>
-                    </div>
-                </div>
-                <button class="remove-item">Удалить</button>
-            </div> -->
         </div>
         <div class="total-price" id ="total-price">Итого: </div>
         <button class="checkout-button" onclick="openOrderModal()">Оформить заказ</button>
@@ -192,14 +179,14 @@ window.onload = main;
                 const cartItem = document.createElement('div');
                 cartItem.classList.add('cart-item');
                 cartItem.innerHTML = `
-                <img src="${item.image}" alt="${item.description}">
+                <img src="../Styles/img/${item.image}" alt="${item.description}">
                 <div>
                     <h2>${item.item_name}</h2>
                     <p>Цена: ${item.cost} руб.</p>
                     <p>Количество: <span id="quantity-${item.id}">${item.quantity}</span></p>
                     <div class="quantity-controls">
                         <button onclick="updateQuantityMinus(${item.id}, -1)">-</button>
-                        <input type="number" id="quantity-input-${item.id}" value="${item.quantity}" min="1" style="width: 40px; text-align: center;" onchange="updateQuantity(${item.id}, this.value - ${item.quantity})">
+                        <input type="hidden" id="quantity-input-${item.id}" value="${item.quantity}" min="1" style="width: 40px; text-align: center;">
                         <button onclick="updateQuantityPlus(${item.id}, 1)">+</button>
                     </div>
                 </div>
@@ -211,73 +198,123 @@ window.onload = main;
             }
             totalPriceContainer.innerHTML = `Итого: ${totalPrice.toFixed(2)} руб.`;
         } catch (ex) {
-            alert(ex);
+            alert("Корзина пуста");
         }
     }
 
     // Пример функции для обновления количества предметов
-    function updateQuantityMinus(itemId, change) {
+    async function updateQuantityMinus(itemId, change) {
         const quantityInput = document.getElementById(`quantity-input-${itemId}`);
         let currentQuantity = parseInt(quantityInput.value);
         currentQuantity += change;
+
         if (currentQuantity < 1) {
             currentQuantity = 1;
-            return;
         }
+        const response = await fetch(`/api/items_to_users_delete?user_id=${userId}&item_id=${itemId}`, {
+            method: 'DELETE'
+        });
 
-        ///доделать
-        quantityInput.value = currentQuantity;
-        document.getElementById(`quantity-${itemId}`).innerText = currentQuantity;
+        if (response.ok) {
+            quantityInput.value = currentQuantity;
+            document.getElementById(`quantity-${itemId}`).innerText = currentQuantity;
+            await updateCartDisplay(); // Обновляем корзину
+        } else {
+            alert("Ошибка при обновлении количества: " + response.status);
+        }
     }
 
-    function updateQuantityPlus(itemId, change) {
+    async function updateQuantityPlus(itemId, change) {
         const quantityInput = document.getElementById(`quantity-input-${itemId}`);
         let currentQuantity = parseInt(quantityInput.value);
         currentQuantity += change;
-        ///доделать
-        quantityInput.value = currentQuantity;
-        document.getElementById(`quantity-${itemId}`).innerText = currentQuantity;
+
+        // Обновляем количество на сервере
+        const response = await fetch(`/api/items_to_users?user_id=${userId}&item_id=${itemId}`, {
+            method: 'POST' // Используем метод POST для увеличения количества
+        });
+
+        if (response.ok) {
+            // Если запрос успешен, обновляем отображение
+            quantityInput.value = currentQuantity;
+            document.getElementById(`quantity-${itemId}`).innerText = currentQuantity;
+            await updateCartDisplay(); // Обновляем корзину
+        } else {
+            alert("Ошибка при обновлении количества: " + response.status);
+        }
     }
 
 
 
-    // Пример функции для удаления предмета из корзины
     async function removeItem(itemId) {
-        alert(`/api/items_to_users_delete?user_id=${userId}&item_id=${itemId}`)
+        try {
+            const response = await fetch(`/api/items_to_users?user_id=${userId}&item_id=${itemId}`);
 
-        const response = await fetch(`/api/items_to_users_delete?user_id=${userId}&item_id=${itemId}`);
-        updateCartDisplay();
+            if (!response.ok) {
+                throw new Error(`Ошибка: ${response.status}`);
+            }
 
+            const items = await response.json(); // Получаем данные из API
+
+            // Удаляем каждую запись
+            for (const item of items) {
+                const deleteResponse = await fetch(`/api/items_to_users_delete?user_id=${userId}&item_id=${itemId}`, {
+                    method: 'DELETE' // Используем метод DELETE для удаления
+                });
+
+                if (!deleteResponse.ok) {
+                    alert(`Ошибка при удалении предмета: ${deleteResponse.status}`);
+                }
+            }
+
+            // Обновляем отображение корзины после удаления
+            await updateCartDisplay();
+        } catch (error) {
+            alert("Ошибка: " + error);
+        }
     }
-
-
-
 
     function goToPage(url){
             document.location.href = url
-        }
-        function openOrderModal() {
-    document.getElementById('orderModal').style.display = 'block';
-}
+    }
 
-function closeOrderModal() {
+    function openOrderModal() {
+        const cartItemsContainer = document.getElementById('cart-items');
+
+        if (cartItemsContainer.children.length === 0) {
+            alert("Корзина пуста. Пожалуйста, добавьте товары в корзину перед оформлением заказа.");
+            return; // Выходим из функции, если корзина пуста
+        }
+
+        document.getElementById('orderModal').style.display = 'block';
+    }
+
+    function closeOrderModal() {
     document.getElementById('orderModal').style.display = 'none';
 }
 
-document.getElementById('orderForm').addEventListener('submit', function(e) {
+
+document.getElementById('orderForm').addEventListener('submit', async function(e) {
     e.preventDefault();
-    
     const orderData = {
         deliveryAddress: document.getElementById('deliveryAddress').value,
         phoneNumber: document.getElementById('phoneNumber').value,
         paymentMethod: document.getElementById('paymentMethod').value,
         orderComment: document.getElementById('orderComment').value
     };
-    
-    // Здесь можно добавить логику отправки данных на сервер
-    console.log('Данные заказа:', orderData);
-    
-    closeOrderModal();
-});
+    try {
+    // alert(JSON.stringify(orderData))
+        const response = await fetch(`/api/items_to_users_delete_all?user_id=${userId}`);
+        if (!response.ok) {
+            throw new Error(`Ошибка при удалении предмета.`);
+        }
+        closeOrderModal();
+        alert("Заказ успешно оформлен!")
+        await updateCartDisplay();
+    } catch (error) {
+        alert("Ошибка: " + error);
+    }
+    });
+
 </script>
 </html>

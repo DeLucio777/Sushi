@@ -34,7 +34,7 @@
 <h2 id="sushi">Суши</h2>
 <div class="contain" id="Sushi_contain">
     <!-- <div class="product" data-price="350">
-        <img src="../Styles/img/photo0jpg.jpg" alt="Суши с терияки">
+        <img src="../Styles/img/{photo0jpg.jpg}" alt="Суши с терияки">
         <h2>Суши с терияки</h2>
         <p>Суши из форели, водорослей, сливочного соуса, огурцов и соуса терияки</p>
         <div class="input-group quantity_goods" style="margin: 5px 0;">
@@ -212,7 +212,7 @@ function displayItems(items) {
         productDiv.setAttribute('data-price', item.cost);
 
         productDiv.innerHTML = `
-            <img src="${item.image}" alt="${item.item_name}">
+            <img src="../Styles/img/${item.image}" alt="${item.item_name}">
             <h2>${item.item_name}</h2>
             <p>${item.description}</p>
             <p class="total-price">Цена: ${item.cost} руб.</p>
@@ -270,7 +270,7 @@ window.onload = main;
         try{
         const productDiv = button.closest('.product');
         const itemId = productDiv.getAttribute('data-id');
-        alert(`/api/items_to_users?user_id=${userId}&item=${itemId}`)
+        // alert(`/api/items_to_users?user_id=${userId}&item=${itemId}`)
         const response = fetch(`/api/items_to_users?user_id=${userId}&item_id=${itemId}`,{
             method: 'POST'
         });
